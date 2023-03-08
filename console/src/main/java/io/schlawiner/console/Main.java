@@ -147,38 +147,37 @@ public class Main {
                 printScoreboard(game);
             }
             if (currentPlayer.human()) {
-                String term = null;
+                String expression = null;
                 boolean validTerm = false;
                 while (!validTerm && !game.isCanceled()) {
                     final String prompt = String.format("%s try to reach %d using %s", currentPlayer.name(), currentNumber,
                             game.getDice());
                     try {
-                        term = textIO.newStringInputReader().read(prompt);
-                        if ("retry".equalsIgnoreCase(term)) {
+                        expression = textIO.newStringInputReader().read(prompt);
+                        if ("retry".equalsIgnoreCase(expression)) {
                             if (game.retry()) {
                                 terminal.printf("You have %d retries left.%n", currentPlayer.retries());
                             } else {
                                 terminal.println("Sorry you have no retries left");
                             }
-                        } else if ("skip".equalsIgnoreCase(term)) {
+                        } else if ("skip".equalsIgnoreCase(expression)) {
                             game.skip();
                             validTerm = true;
-                        } else if ("cancel".equalsIgnoreCase(term)) {
+                        } else if ("cancel".equalsIgnoreCase(expression)) {
                             game.cancel();
                         } else {
-                            final Calculation calculation = game.calculate(term);
-                            if (calculation.isBest()) {
+                            final Calculation calculation = game.calculate(expression);
+                            if (calculation.best()) {
                                 terminal.printf("Well done, your solution is the best.%n");
                             } else {
                                 terminal.printf("Your difference is %d. The best solution is %s (difference %d)%n",
-                                        calculation.getDifference(), calculation.getBestSolution(),
-                                        calculation.getBestDifference());
+                                        calculation.difference(), calculation.bestSolution(), calculation.bestDifference());
                             }
-                            game.score(term, calculation.getDifference());
+                            game.score(calculation.term(), calculation.difference());
                             validTerm = true;
                         }
                     } catch (final ArithmeticException e) {
-                        terminal.printf("No valid term '%s': %s%n", term, e.getMessage());
+                        terminal.printf("No valid term '%s': %s%n", expression, e.getMessage());
                     }
                 }
             } else {

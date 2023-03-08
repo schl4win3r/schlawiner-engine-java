@@ -24,6 +24,8 @@ import io.schlawiner.engine.term.Operator;
 import io.schlawiner.engine.term.Term;
 import io.schlawiner.engine.term.TermBuilder;
 
+import static io.schlawiner.engine.term.TermBuilder.Order.LEFT_RIGHT;
+
 public class TermAlgorithm extends AbstractAlgorithm implements Serializable {
 
     private static final String A = "a";
@@ -37,41 +39,41 @@ public class TermAlgorithm extends AbstractAlgorithm implements Serializable {
         terms = new ArrayList<>();
 
         // a + b + c
-        terms.add(new TermBuilder().op(Operator.PLUS).op(Operator.PLUS).var(A).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.PLUS).op(Operator.PLUS).var(A).var(B).var(C).build());
         // a - b - c
-        terms.add(new TermBuilder().op(Operator.MINUS).op(Operator.MINUS).var(A).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.MINUS).op(Operator.MINUS).var(A).var(B).var(C).build());
         // a * b * c
-        terms.add(new TermBuilder().op(Operator.TIMES).op(Operator.TIMES).var(A).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.TIMES).op(Operator.TIMES).var(A).var(B).var(C).build());
         // a / b / c
-        terms.add(new TermBuilder().op(Operator.DIVIDED).op(Operator.DIVIDED).var(A).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.DIVIDED).op(Operator.DIVIDED).var(A).var(B).var(C).build());
         // a + b - c
-        terms.add(new TermBuilder().op(Operator.MINUS).op(Operator.PLUS).var(A).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.MINUS).op(Operator.PLUS).var(A).var(B).var(C).build());
         // a * b / c
-        terms.add(new TermBuilder().op(Operator.DIVIDED).op(Operator.TIMES).var(A).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.DIVIDED).op(Operator.TIMES).var(A).var(B).var(C).build());
         // a * b + c
-        terms.add(new TermBuilder().op(Operator.PLUS).op(Operator.TIMES).var(A).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.PLUS).op(Operator.TIMES).var(A).var(B).var(C).build());
         // (a + b) * c
-        terms.add(new TermBuilder().op(Operator.TIMES).op(Operator.PLUS).var(A).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.TIMES).op(Operator.PLUS).var(A).var(B).var(C).build());
         // a * b - c
-        terms.add(new TermBuilder().op(Operator.MINUS).op(Operator.TIMES).var(A).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.MINUS).op(Operator.TIMES).var(A).var(B).var(C).build());
         // a - b * c
-        terms.add(new TermBuilder().op(Operator.MINUS).var(A).op(Operator.TIMES).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.MINUS).var(A).op(Operator.TIMES).var(B).var(C).build());
         // (a - b) * c
-        terms.add(new TermBuilder().op(Operator.TIMES).op(Operator.MINUS).var(A).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.TIMES).op(Operator.MINUS).var(A).var(B).var(C).build());
         // a / b + c
-        terms.add(new TermBuilder().op(Operator.PLUS).op(Operator.DIVIDED).var(A).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.PLUS).op(Operator.DIVIDED).var(A).var(B).var(C).build());
         // (a + b) / c
-        terms.add(new TermBuilder().op(Operator.DIVIDED).op(Operator.PLUS).var(A).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.DIVIDED).op(Operator.PLUS).var(A).var(B).var(C).build());
         // a / (b + c)
-        terms.add(new TermBuilder().op(Operator.DIVIDED).var(A).op(Operator.PLUS).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.DIVIDED).var(A).op(Operator.PLUS).var(B).var(C).build());
         // a / b - c
-        terms.add(new TermBuilder().op(Operator.MINUS).op(Operator.DIVIDED).var(A).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.MINUS).op(Operator.DIVIDED).var(A).var(B).var(C).build());
         // a - b / c
-        terms.add(new TermBuilder().op(Operator.MINUS).var(A).op(Operator.DIVIDED).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.MINUS).var(A).op(Operator.DIVIDED).var(B).var(C).build());
         // (a - b) / c
-        terms.add(new TermBuilder().op(Operator.DIVIDED).op(Operator.MINUS).var(A).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.DIVIDED).op(Operator.MINUS).var(A).var(B).var(C).build());
         // a / (b - c)
-        terms.add(new TermBuilder().op(Operator.DIVIDED).var(A).op(Operator.MINUS).var(B).var(C).build());
+        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.DIVIDED).var(A).op(Operator.MINUS).var(B).var(C).build());
     }
 
     @SuppressWarnings("Duplicates")

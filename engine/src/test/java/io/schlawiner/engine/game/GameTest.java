@@ -36,7 +36,7 @@ class GameTest {
 
     @BeforeEach
     void setUp() {
-        Settings settings = Settings.defaults().withLevel(Level.HARD);
+        final Settings settings = Settings.defaults().withLevel(Level.HARD);
         foo = Player.human("foo", settings.retries());
         computer = Player.computer("computer");
         game = new Game("test-game", new Players(asList(foo, computer)), new Numbers(new int[] { 16, 23, 42 }),
@@ -54,7 +54,7 @@ class GameTest {
         game.dice(new Dice(1, 2, 3));
         game.next(); // foo
         calculation = game.calculate(term);
-        game.score(term, calculation.getDifference());
+        game.score(term, calculation.difference());
         game.next(); // computer
         solution = game.solve();
         game.score(solution);
@@ -64,7 +64,7 @@ class GameTest {
         game.dice(new Dice(4, 3, 1));
         game.next(); // foo
         calculation = game.calculate(term);
-        game.score(term, calculation.getDifference());
+        game.score(term, calculation.difference());
         game.next(); // computer
         solution = game.solve();
         game.score(solution);
@@ -74,7 +74,7 @@ class GameTest {
         game.dice(new Dice(2, 5, 6));
         game.next(); // foo
         calculation = game.calculate(term);
-        game.score(term, calculation.getDifference());
+        game.score(term, calculation.difference());
         game.next(); // computer
         solution = game.solve();
         game.score(solution);

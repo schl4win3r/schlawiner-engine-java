@@ -28,9 +28,9 @@ public class Players implements Iterable<Player> {
     private final transient Iterator<Player> iterator;
     private Player current;
 
-    public Players(Iterable<Player> players) {
+    public Players(final Iterable<Player> players) {
         this.players = new ArrayList<>();
-        for (Player player : players) {
+        for (final Player player : players) {
             this.players.add(player);
         }
         this.iterator = cycle(players);
@@ -60,7 +60,7 @@ public class Players implements Iterable<Player> {
         return players.iterator();
     }
 
-    public int indexOf(Player p) {
+    public int indexOf(final Player p) {
         return players.indexOf(p);
     }
 

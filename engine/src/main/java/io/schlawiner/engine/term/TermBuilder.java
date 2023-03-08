@@ -19,11 +19,17 @@ import java.util.Stack;
 
 public class TermBuilder {
 
+    public enum Order {
+        LEFT_RIGHT, RIGHT_LEFT
+    }
+
     private Term current;
     private int namingIndex;
     private final Stack<Term> terms;
+    private final Order order;
 
-    public TermBuilder() {
+    public TermBuilder(final Order order) {
+        this.order = order;
         this.namingIndex = 0;
         this.terms = new Stack<>();
     }
@@ -47,8 +53,7 @@ public class TermBuilder {
 
     private TermBuilder assign(final String name, final int value) {
         if (terms.isEmpty()) {
-            throw new IllegalStateException(
-                    "No expression available when calling TermBuilder.assign(" + name + ", " + value + ")");
+            throw new ArithmeticException("Invalid term");
         }
 
         final Variable v = new Variable(name, value);
@@ -62,16 +67,26 @@ public class TermBuilder {
     }
 
     private void add(final Term parent, final Node child) {
-        if (parent.getLeft() == null) {
-            parent.setLeft(child);
-        } else if (parent.getRight() == null) {
-            parent.setRight(child);
+        if (order == Order.LEFT_RIGHT) {
+            if (parent.getLeft() == null) {
+                parent.setLeft(child);
+            } else if (parent.getRight() == null) {
+                parent.setRight(child);
+            }
+        } else if (order == Order.RIGHT_LEFT) {
+            if (parent.getRight() == null) {
+                parent.setRight(child);
+            } else if (parent.getLeft() == null) {
+                parent.setLeft(child);
+            }
+        } else {
+            throw new IllegalStateException("No order defined");
         }
     }
 
     public Term build() {
         if (!terms.isEmpty()) {
-            throw new IllegalStateException("Unbalanced calls");
+            throw new ArithmeticException("Invalid term");
         }
         return current;
     }

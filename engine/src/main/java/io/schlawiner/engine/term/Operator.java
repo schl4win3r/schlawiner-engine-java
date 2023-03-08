@@ -52,14 +52,14 @@ public enum Operator {
     }
 
     public static Operator toOperator(final String token) {
-        if ("+".equals(token)) {
-            return PLUS;
-        } else if ("-".equals(token)) {
-            return MINUS;
-        } else if ("*".equals(token)) {
-            return TIMES;
-        } else if ("/".equals(token)) {
-            return DIVIDED;
+        if (token != null) {
+            return switch (token) {
+                case "+" -> PLUS;
+                case "-" -> MINUS;
+                case "*" -> TIMES;
+                case "/" -> DIVIDED;
+                default -> null;
+            };
         }
         return null;
     }

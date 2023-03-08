@@ -16,32 +16,15 @@
 package io.schlawiner.engine.game;
 
 import io.schlawiner.engine.algorithm.Solution;
+import io.schlawiner.engine.term.Term;
 
-public class Calculation {
+public record Calculation(Term term, int difference, int currentNumber, Solution bestSolution) {
 
-    private final int difference;
-    private final int bestDifference;
-    private final Solution bestSolution;
-
-    Calculation(int difference, int currentNumber, Solution bestSolution) {
-        this.difference = difference;
-        this.bestSolution = bestSolution;
-        this.bestDifference = bestSolution == null ? difference : Math.abs(bestSolution.value() - currentNumber);
+    public boolean best() {
+        return difference == 0 || difference == bestDifference();
     }
 
-    public boolean isBest() {
-        return difference == 0 || difference == bestDifference;
-    }
-
-    public int getDifference() {
-        return difference;
-    }
-
-    public int getBestDifference() {
-        return bestDifference;
-    }
-
-    public Solution getBestSolution() {
-        return bestSolution;
+    public int bestDifference() {
+        return Math.abs(bestSolution.value() - currentNumber);
     }
 }

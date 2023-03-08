@@ -23,27 +23,27 @@ public record Settings(int timeout, int penalty, int retries, int numbers, boole
         return new Settings(60, 5, 3, 8, false, MEDIUM);
     }
 
-    public Settings withTimeout(int timeout) {
+    public Settings withTimeout(final int timeout) {
         return new Settings(timeout, penalty, retries, numbers, autoDice, level);
     }
 
-    public Settings withPenalty(int penalty) {
+    public Settings withPenalty(final int penalty) {
         return new Settings(timeout, penalty, retries, numbers, autoDice, level);
     }
 
-    public Settings withRetries(int retries) {
+    public Settings withRetries(final int retries) {
         return new Settings(timeout, penalty, retries, numbers, autoDice, level);
     }
 
-    public Settings withNumbers(int numbers) {
+    public Settings withNumbers(final int numbers) {
         return new Settings(timeout, penalty, retries, numbers, autoDice, level);
     }
 
-    public Settings withLevel(Level level) {
+    public Settings withLevel(final Level level) {
         return new Settings(timeout, penalty, retries, numbers, autoDice, level);
     }
 
-    public Settings withAutoDice(boolean autoDice) {
+    public Settings withAutoDice(final boolean autoDice) {
         return new Settings(timeout, penalty, retries, numbers, autoDice, level);
     }
 }

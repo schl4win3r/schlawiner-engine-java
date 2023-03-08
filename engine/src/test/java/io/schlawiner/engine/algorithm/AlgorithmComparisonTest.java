@@ -15,6 +15,9 @@
  */
 package io.schlawiner.engine.algorithm;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -35,12 +38,12 @@ class AlgorithmComparisonTest {
         final Solutions[] results = new Solutions[diceNumbers.length];
 
         for (int i = 0; i < diceNumbers.length; i++) {
-            final long start = System.currentTimeMillis();
+            final Instant start = Instant.now();
             for (int target = 1; target < 101; target++) {
                 results[i] = algorithm.compute(diceNumbers[i][0], diceNumbers[i][1], diceNumbers[i][2], target);
             }
-            final long finish = System.currentTimeMillis();
-            final long timeElapsed = finish - start;
+            final Instant finish = Instant.now();
+            final long timeElapsed = Duration.between(start, finish).toMillis();
             System.out.format("%s finished with %d results in %d ms for targets 1..100 using [%d,%d,%d]%n", algorithm.getName(),
                     results[i].size(), timeElapsed, diceNumbers[i][0], diceNumbers[i][1], diceNumbers[i][2]);
             numberOfResults[i] = results[i].size();

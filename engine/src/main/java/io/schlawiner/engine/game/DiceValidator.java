@@ -20,19 +20,21 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.schlawiner.engine.term.Term;
+
 public final class DiceValidator {
 
     private static final int[] MULTIPLIERS = new int[] { 1, 10, 100 };
     private static final Pattern NUMBERS = Pattern.compile("\\d+");
 
-    static void validate(final Dice dice, final String term) throws ArithmeticException {
-        final int[] termNumbers = extractTermNumbers(term, true);
-        if (termNumbers.length < dice.numbers().length) {
+    static void validate(final Dice dice, final Term term) throws ArithmeticException {
+        final int[] values = term.getValues();
+        if (values.length < dice.numbers().length) {
             throw new ArithmeticException("The term contains not all dice numbers.");
-        } else if (termNumbers.length > dice.numbers().length) {
+        } else if (values.length > dice.numbers().length) {
             throw new ArithmeticException("The term contains more numbers than diced.");
         } else {
-            final boolean[] used = internalUsed(dice, termNumbers);
+            final boolean[] used = internalUsed(dice, values);
             for (final boolean b : used) {
                 if (!b) {
                     throw new ArithmeticException("You have not used all the dice numbers.");
@@ -41,8 +43,11 @@ public final class DiceValidator {
         }
     }
 
-    public static boolean[] used(final Dice dice, final String term) {
-        final int[] termNumbers = extractTermNumbers(term, false);
+    /**
+     * Count used number of a probably invalid term.
+     */
+    static boolean[] used(final Dice dice, final String term) {
+        final int[] termNumbers = extractTermNumbers(term);
         return internalUsed(dice, termNumbers);
     }
 
@@ -64,13 +69,9 @@ public final class DiceValidator {
         return used;
     }
 
-    private static int[] extractTermNumbers(final String term, final boolean picky) {
+    private static int[] extractTermNumbers(final String term) {
         if (term == null || term.trim().length() == 0) {
-            if (picky) {
-                throw new ArithmeticException("Empty term");
-            } else {
-                return new int[0];
-            }
+            return new int[0];
         }
 
         final Matcher matcher = NUMBERS.matcher(term);
@@ -80,9 +81,7 @@ public final class DiceValidator {
             try {
                 numbers.add(Integer.valueOf(number));
             } catch (final NumberFormatException e) {
-                if (picky) {
-                    throw new ArithmeticException(number + " is invalid");
-                }
+                throw new ArithmeticException(number + " is invalid");
             }
         }
         int index = 0;

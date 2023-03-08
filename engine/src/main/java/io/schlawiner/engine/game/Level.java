@@ -20,7 +20,7 @@ public enum Level {
 
     private final int maxDifference;
 
-    Level(int maxDifference) {
+    Level(final int maxDifference) {
         this.maxDifference = maxDifference;
     }
 

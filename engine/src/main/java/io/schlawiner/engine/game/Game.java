@@ -22,6 +22,8 @@ import io.schlawiner.engine.algorithm.Algorithm;
 import io.schlawiner.engine.algorithm.Solution;
 import io.schlawiner.engine.algorithm.Solutions;
 import io.schlawiner.engine.score.Scoreboard;
+import io.schlawiner.engine.term.Term;
+import io.schlawiner.engine.term.TermParser;
 
 import static java.lang.Math.abs;
 
@@ -132,16 +134,19 @@ public class Game {
      *
      * @throws ArithmeticException if the term is not valid
      */
-    public Calculation calculate(final String term) {
+    public Calculation calculate(final String expression) {
         final Calculation calculation;
-        final int result = Calculator.calculate(term, dice);
+        final Term term = TermParser.parse(expression);
+        DiceValidator.validate(dice, term);
+
+        final int result = term.eval();
         final int difference = abs(result - numbers.current());
         if (difference > 0) {
             final Solutions solutions = algorithm.compute(dice.numbers()[0], dice.numbers()[1], dice.numbers()[2],
                     numbers.current());
-            calculation = new Calculation(difference, numbers.current(), solutions.bestSolution());
+            calculation = new Calculation(term, difference, numbers.current(), solutions.bestSolution());
         } else {
-            calculation = new Calculation(difference, numbers.current(), null);
+            calculation = new Calculation(term, difference, numbers.current(), new Solution(term.print(), term.eval()));
         }
         return calculation;
     }
@@ -161,6 +166,10 @@ public class Game {
     }
 
     /** Stores the difference to the current number for the current player in the score board. */
+    public void score(final Term term, final int difference) {
+        score(term.print(), difference);
+    }
+
     public void score(final String term, final int difference) {
         scoreboard.setScore(numbers.index(), players.current(), term, difference);
     }

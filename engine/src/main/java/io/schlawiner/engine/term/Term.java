@@ -15,7 +15,9 @@
  */
 package io.schlawiner.engine.term;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
 
 import static io.schlawiner.engine.util.Iterators.forArray;
@@ -45,7 +47,7 @@ public class Term implements Node {
     }
 
     Term assign(final String name, final int value) {
-        final Variable v = new SearchIterator().search(this, name);
+        final Variable v = new VariableIterator().search(this, name);
         if (v != null) {
             v.setValue(value);
         }
@@ -55,6 +57,14 @@ public class Term implements Node {
     public Term assign(final Integer... values) {
         new AssignValuesIterator().assign(this, values);
         return this;
+    }
+
+    public int[] getValues() {
+        return new ValuesIterator().values(this);
+    }
+
+    public List<Operator> getOperators() {
+        return new OperatorsIterator().operators(this);
     }
 
     @Override
@@ -89,9 +99,7 @@ public class Term implements Node {
         this.right.setParent(this);
     }
 
-    private Operator getOperator() {
-        return operator;
-    }
+    // ------------------------------------------------------ iterators
 
     static class EvalIterator {
 
@@ -102,31 +110,24 @@ public class Term implements Node {
         }
 
         private void postOrder(final Node node, final Stack<Integer> stack) {
-            if (node instanceof Term) {
+            if (node instanceof final Term t) {
                 postOrder(node.getLeft(), stack);
                 postOrder(node.getRight(), stack);
                 final int right = stack.pop();
                 final int left = stack.pop();
-                int result = 0;
-                switch (((Term) node).getOperator()) {
-                    case PLUS:
-                        result = left + right;
-                        break;
-                    case MINUS:
-                        result = left - right;
-                        break;
-                    case TIMES:
-                        result = left * right;
-                        break;
-                    case DIVIDED:
+                final int result = switch (t.operator) {
+                    case PLUS -> left + right;
+                    case MINUS -> left - right;
+                    case TIMES -> left * right;
+                    case DIVIDED -> {
                         if (right == 0 || left % right != 0) {
                             throw new ArithmeticException("Illegal division: " + left + " / " + right);
                         }
-                        result = left / right;
-                        break;
-                }
+                        yield left / right;
+                    }
+                };
                 stack.push(result);
-            } else if (node instanceof Variable v) {
+            } else if (node instanceof final Variable v) {
                 if (!v.isAssigned()) {
                     throw new ArithmeticException("Variable is not assigned");
                 }
@@ -146,7 +147,7 @@ public class Term implements Node {
         private void inOrder(final Node node, final StringBuilder builder) {
             if (node != null) {
                 inOrder(node.getLeft(), builder);
-                if (node instanceof Variable v) {
+                if (node instanceof final Variable v) {
                     final boolean bracket = needsBracket(v);
                     if (bracket && v == v.getParent().getLeft()) {
                         builder.append("(");
@@ -159,17 +160,17 @@ public class Term implements Node {
                     if (bracket && v == v.getParent().getRight()) {
                         builder.append(")");
                     }
-                } else if (node instanceof Term e) {
-                    builder.append(" ").append(e.getOperator()).append(" ");
+                } else if (node instanceof final Term e) {
+                    builder.append(" ").append(e.operator).append(" ");
                 }
                 inOrder(node.getRight(), builder);
             }
         }
 
         private boolean needsBracket(final Node node) {
-            if (node.getParent() instanceof Term parent && node.getParent().getParent() instanceof Term) {
+            if (node.getParent() instanceof final Term parent && node.getParent().getParent() instanceof Term) {
                 final Term grandparent = (Term) parent.getParent();
-                return parent.getOperator().precedence() < grandparent.getOperator().precedence();
+                return parent.operator.precedence() < grandparent.operator.precedence();
             }
             return false;
         }
@@ -185,7 +186,7 @@ public class Term implements Node {
         private void inOrder(final Node node, final Iterator<Integer> iterator) {
             if (node != null && iterator.hasNext()) {
                 inOrder(node.getLeft(), iterator);
-                if (node instanceof Variable v) {
+                if (node instanceof final Variable v) {
                     v.setValue(iterator.next());
                 }
                 inOrder(node.getRight(), iterator);
@@ -193,7 +194,46 @@ public class Term implements Node {
         }
     }
 
-    static class SearchIterator {
+    static class ValuesIterator {
+
+        int[] values(final Term term) {
+            final List<Integer> numbers = new ArrayList<>();
+            inOrder(term, numbers);
+            return numbers.stream().mapToInt(Integer::intValue).toArray();
+        }
+
+        private void inOrder(final Node node, final List<Integer> numbers) {
+            if (node != null) {
+                inOrder(node.getLeft(), numbers);
+                if (node instanceof final Variable v) {
+                    if (v.getValue() != Variable.DEFAULT_VALUE) {
+                        numbers.add(v.getValue());
+                    }
+                }
+                inOrder(node.getRight(), numbers);
+            }
+        }
+    }
+
+    static class OperatorsIterator {
+        List<Operator> operators(final Term term) {
+            final List<Operator> operators = new ArrayList<>();
+            inOrder(term, operators);
+            return operators;
+        }
+
+        private void inOrder(final Node node, final List<Operator> operators) {
+            if (node != null) {
+                inOrder(node.getLeft(), operators);
+                if (node instanceof final Term t) {
+                    operators.add(t.operator);
+                }
+                inOrder(node.getRight(), operators);
+            }
+        }
+    }
+
+    static class VariableIterator {
 
         Variable search(final Term term, final String name) {
             final Variable[] result = new Variable[1];
@@ -204,7 +244,7 @@ public class Term implements Node {
         private void inOrder(final Node node, final String name, final Variable[] result) {
             if (node != null && result[0] == null) {
                 inOrder(node.getLeft(), name, result);
-                if (node instanceof Variable v) {
+                if (node instanceof final Variable v) {
                     if (name.equals(v.getName())) {
                         result[0] = v;
                     }

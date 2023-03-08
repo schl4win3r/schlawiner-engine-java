@@ -40,7 +40,7 @@ public class Room {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Room room)) {
+        if (!(o instanceof final Room room)) {
             return false;
         }
         return Objects.equals(name, room.name);

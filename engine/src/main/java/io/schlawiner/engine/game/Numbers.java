@@ -25,22 +25,22 @@ public class Numbers implements Iterable<Integer> {
     private final int count;
     private int index;
     private int current;
-    private Integer[] numbers;
+    private final Integer[] numbers;
 
     /** Generates {@code count} random numbers */
-    public Numbers(int count) {
+    public Numbers(final int count) {
         this.count = count;
         this.index = -1;
         this.current = -1;
         this.numbers = new Integer[count];
-        Random random = new Random();
+        final Random random = new Random();
         for (int i = 0; i < numbers.length; i++) {
             numbers[i] = 1 + random.nextInt(100);
         }
     }
 
     // Used for unit tests
-    Numbers(int[] numbers) {
+    Numbers(final int[] numbers) {
         this.count = numbers.length;
         this.index = -1;
         this.current = -1;
@@ -80,7 +80,7 @@ public class Numbers implements Iterable<Integer> {
         return current;
     }
 
-    public int get(int index) {
+    public int get(final int index) {
         if (index > -1 && index < numbers.length) {
             return numbers[index];
         }

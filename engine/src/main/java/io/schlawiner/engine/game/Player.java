@@ -17,11 +17,11 @@ package io.schlawiner.engine.game;
 
 public record Player(String name, boolean human, int retries) {
 
-    public static Player human(String name, int retries) {
+    public static Player human(final String name, final int retries) {
         return new Player(name, true, retries);
     }
 
-    static Player computer(String name) {
+    static Player computer(final String name) {
         return new Player(name, false, 0);
     }
 

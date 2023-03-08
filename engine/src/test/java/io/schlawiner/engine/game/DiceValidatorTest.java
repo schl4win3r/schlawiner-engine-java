@@ -18,6 +18,8 @@ package io.schlawiner.engine.game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import io.schlawiner.engine.term.TermParser;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -31,44 +33,29 @@ class DiceValidatorTest {
     }
 
     @Test
-    void validateNull() {
-        assertThrows(ArithmeticException.class, () -> DiceValidator.validate(dice, null));
-    }
-
-    @Test
-    void validateEmpty() {
-        assertThrows(ArithmeticException.class, () -> DiceValidator.validate(dice, ""));
-    }
-
-    @Test
-    void validateBlank() {
-        assertThrows(ArithmeticException.class, () -> DiceValidator.validate(dice, "       "));
-    }
-
-    @Test
-    void oneNumber() {
-        assertThrows(ArithmeticException.class, () -> DiceValidator.validate(dice, "1"));
-    }
-
-    @Test
     void twoNumbers() {
-        assertThrows(ArithmeticException.class, () -> DiceValidator.validate(dice, "1 2"));
+        assertThrows(ArithmeticException.class, () -> DiceValidator.validate(dice, TermParser.parse("1 + 2")));
     }
 
     @Test
     void fourNumbers() {
-        assertThrows(ArithmeticException.class, () -> DiceValidator.validate(dice, "1 2 3 4"));
+        assertThrows(ArithmeticException.class, () -> DiceValidator.validate(dice, TermParser.parse("1 + 2 + 3 + 4")));
     }
 
     @Test
     void wrongNumbers() {
-        assertThrows(ArithmeticException.class, () -> DiceValidator.validate(dice, "1 2 4"));
+        assertThrows(ArithmeticException.class, () -> DiceValidator.validate(dice, TermParser.parse("1 + 2 + 4")));
+    }
+
+    @Test
+    void wrongMultiplier() {
+        assertThrows(ArithmeticException.class, () -> DiceValidator.validate(dice, TermParser.parse("1 + 2 + 3000")));
     }
 
     @Test
     void validate() {
-        DiceValidator.validate(dice, "1 2 3");
-        DiceValidator.validate(dice, "1 20 300");
+        DiceValidator.validate(dice, TermParser.parse("1 + 2 + 3"));
+        DiceValidator.validate(dice, TermParser.parse("1 + 20 + 300"));
     }
 
     @Test
