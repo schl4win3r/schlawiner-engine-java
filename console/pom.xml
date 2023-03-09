@@ -34,7 +34,6 @@
     <description>Console based game</description>
 
     <properties>
-        <version.slf4j>2.0.6</version.slf4j>
         <version.text.io>3.4.1</version.text.io>
     </properties>
 
@@ -47,11 +46,6 @@
             <groupId>org.beryx</groupId>
             <artifactId>text-io</artifactId>
             <version>${version.text.io}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-nop</artifactId>
-            <version>${version.slf4j}</version>
         </dependency>
     </dependencies>
 
@@ -69,7 +63,7 @@
                         <configuration>
                             <transformers>
                                 <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
                                         <Main-Class>io.schlawiner.console.Main</Main-Class>
                                     </manifestEntries>

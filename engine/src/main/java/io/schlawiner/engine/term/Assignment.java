@@ -15,18 +15,16 @@
  */
 package io.schlawiner.engine.term;
 
-/** Node of a binary tree */
-public sealed interface Node permits Term, Variable, Value {
+import java.util.HashMap;
+import java.util.Map;
 
-    Node getParent();
+public record Assignment(String name, int value) {
 
-    void setParent(Node parent);
-
-    Node getLeft();
-
-    void setLeft(Node left);
-
-    Node getRight();
-
-    void setRight(Node right);
+    static Map<String, Integer> byName(final Assignment... assignments) {
+        final Map<String, Integer> assignmentsByName = new HashMap<>();
+        for (final Assignment assignment : assignments) {
+            assignmentsByName.put(assignment.name(), assignment.value());
+        }
+        return assignmentsByName;
+    }
 }

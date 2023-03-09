@@ -17,24 +17,20 @@ package io.schlawiner.engine.term;
 
 import java.util.Stack;
 
-public class TermBuilder {
+class TermBuilder {
 
-    public enum Order {
-        LEFT_RIGHT, RIGHT_LEFT
-    }
-
-    private Term current;
-    private int namingIndex;
+    private final String expression;
     private final Stack<Term> terms;
-    private final Order order;
+    private boolean variablesAdded;
+    private Term current;
 
-    public TermBuilder(final Order order) {
-        this.order = order;
-        this.namingIndex = 0;
+    TermBuilder(final String expression) {
+        this.expression = expression;
         this.terms = new Stack<>();
+        this.variablesAdded = false;
     }
 
-    public TermBuilder op(final Operator op) {
+    TermBuilder op(final Operator op) {
         final Term e = new Term(op);
         if (!terms.isEmpty()) {
             add(terms.peek(), e);
@@ -43,22 +39,22 @@ public class TermBuilder {
         return this;
     }
 
-    public TermBuilder var(final String name) {
-        return assign(name, Variable.DEFAULT_VALUE);
+    TermBuilder var(final String name) {
+        variablesAdded = true;
+        return assign(new Variable(name));
     }
 
     TermBuilder val(final int value) {
-        return assign(Variable.DEFAULT_NAME + (namingIndex++), value);
+        return assign(new Value(value));
     }
 
-    private TermBuilder assign(final String name, final int value) {
+    private TermBuilder assign(Node node) {
         if (terms.isEmpty()) {
-            throw new ArithmeticException("Invalid term");
+            throw new TermException(String.format("Invalid term: '%s'", expression));
         }
 
-        final Variable v = new Variable(name, value);
         Term e = terms.peek();
-        add(e, v);
+        add(e, node);
         while (e != null && e.isComplete()) {
             current = terms.pop();
             e = terms.isEmpty() ? null : terms.peek();
@@ -67,27 +63,19 @@ public class TermBuilder {
     }
 
     private void add(final Term parent, final Node child) {
-        if (order == Order.LEFT_RIGHT) {
-            if (parent.getLeft() == null) {
-                parent.setLeft(child);
-            } else if (parent.getRight() == null) {
-                parent.setRight(child);
-            }
-        } else if (order == Order.RIGHT_LEFT) {
-            if (parent.getRight() == null) {
-                parent.setRight(child);
-            } else if (parent.getLeft() == null) {
-                parent.setLeft(child);
-            }
-        } else {
-            throw new IllegalStateException("No order defined");
+        // fill in right then left, order is important here!
+        if (parent.getRight() == null) {
+            parent.setRight(child);
+        } else if (parent.getLeft() == null) {
+            parent.setLeft(child);
         }
     }
 
-    public Term build() {
+    Term build() {
         if (!terms.isEmpty()) {
-            throw new ArithmeticException("Invalid term");
+            throw new TermException(String.format("Invalid term: '%s'", expression));
         }
+        current.hasVariables = variablesAdded;
         return current;
     }
 }

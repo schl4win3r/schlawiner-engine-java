@@ -23,7 +23,6 @@ import io.schlawiner.engine.algorithm.Solution;
 import io.schlawiner.engine.algorithm.Solutions;
 import io.schlawiner.engine.score.Scoreboard;
 import io.schlawiner.engine.term.Term;
-import io.schlawiner.engine.term.TermParser;
 
 import static java.lang.Math.abs;
 
@@ -131,12 +130,10 @@ public class Game {
      * Meant to be called for human players.
      *
      * @return the difference between the calculated solution and the current number
-     *
-     * @throws ArithmeticException if the term is not valid
      */
     public Calculation calculate(final String expression) {
         final Calculation calculation;
-        final Term term = TermParser.parse(expression);
+        final Term term = Term.valueOf(expression);
         DiceValidator.validate(dice, term);
 
         final int result = term.eval();

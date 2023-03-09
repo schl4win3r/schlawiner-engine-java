@@ -15,9 +15,7 @@
  */
 package io.schlawiner.engine.algorithm;
 
-import java.io.Serializable;
-
-public class OperationAlgorithm extends AbstractAlgorithm implements Serializable {
+public class OperationAlgorithm extends AbstractAlgorithm {
 
     public OperationAlgorithm() {
         super("Algorithm based on static operations");

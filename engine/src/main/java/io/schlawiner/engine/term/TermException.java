@@ -15,18 +15,9 @@
  */
 package io.schlawiner.engine.term;
 
-/** Node of a binary tree */
-public sealed interface Node permits Term, Variable, Value {
+public class TermException extends RuntimeException {
 
-    Node getParent();
-
-    void setParent(Node parent);
-
-    Node getLeft();
-
-    void setLeft(Node left);
-
-    Node getRight();
-
-    void setRight(Node right);
+    public TermException(final String message) {
+        super(message);
+    }
 }

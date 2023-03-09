@@ -15,13 +15,13 @@
  */
 package io.schlawiner.engine.term;
 
-final class Variable implements Node {
+final class Value implements Node {
 
-    final String name;
+    final int value;
     private Node parent;
 
-    Variable(final String name) {
-        this.name = name;
+    Value(final int value) {
+        this.value = value;
     }
 
     @Override
@@ -56,6 +56,6 @@ final class Variable implements Node {
 
     @Override
     public String toString() {
-        return name;
+        return String.valueOf(value);
     }
 }

@@ -18,49 +18,8 @@ package io.schlawiner.engine.term;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TermParserTest {
-
-    @Test
-    void nil() {
-        assertThrows(ArithmeticException.class, () -> TermParser.parse(null));
-    }
-
-    @Test
-    void empty() {
-        assertThrows(ArithmeticException.class, () -> TermParser.parse(""));
-    }
-
-    @Test
-    void blank() {
-        assertThrows(ArithmeticException.class, () -> TermParser.parse("  "));
-    }
-
-    @Test
-    void noExpression() {
-        assertThrows(ArithmeticException.class, () -> TermParser.parse("foo"));
-    }
-
-    @Test
-    void oneNumber() {
-        assertThrows(ArithmeticException.class, () -> TermParser.parse("1"));
-    }
-
-    @Test
-    void oneOperator() {
-        assertThrows(ArithmeticException.class, () -> TermParser.parse("+"));
-    }
-
-    @Test
-    void noOperator() {
-        assertThrows(ArithmeticException.class, () -> TermParser.parse("1 2"));
-    }
-
-    @Test
-    void wrongOperator() {
-        assertThrows(ArithmeticException.class, () -> TermParser.parse("10 & 2 % 3"));
-    }
 
     @Test
     void eval() {

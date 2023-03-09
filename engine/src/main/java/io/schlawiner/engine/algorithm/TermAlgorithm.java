@@ -17,230 +17,144 @@ package io.schlawiner.engine.algorithm;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import io.schlawiner.engine.term.Operator;
+import io.schlawiner.engine.term.Assignment;
 import io.schlawiner.engine.term.Term;
-import io.schlawiner.engine.term.TermBuilder;
-
-import static io.schlawiner.engine.term.TermBuilder.Order.LEFT_RIGHT;
+import io.schlawiner.engine.term.TermException;
 
 public class TermAlgorithm extends AbstractAlgorithm implements Serializable {
 
-    private static final String A = "a";
-    private static final String B = "b";
-    private static final String C = "c";
+    private static final List<Term> SAME_NUMBERS = new ArrayList<>();
+    private static final List<Term> DIFF_NUMBERS = new ArrayList<>();
+    static {
+        // a + b + c
+        SAME_NUMBERS.add(Term.valueOf("a + b + c"));
 
-    private final List<Term> terms;
+        // a - b - c
+        SAME_NUMBERS.add(Term.valueOf("a - b - c"));
+        DIFF_NUMBERS.add(Term.valueOf("b - a - c"));
+        DIFF_NUMBERS.add(Term.valueOf("c - a - b"));
+
+        // a * b * c
+        SAME_NUMBERS.add(Term.valueOf("a * b * c"));
+
+        // a / b / c
+        SAME_NUMBERS.add(Term.valueOf("a / b / c"));
+        DIFF_NUMBERS.add(Term.valueOf("b / a / c"));
+        DIFF_NUMBERS.add(Term.valueOf("c / a / b"));
+
+        // a + b - c
+        SAME_NUMBERS.add(Term.valueOf("a + b - c"));
+        DIFF_NUMBERS.add(Term.valueOf("a + c - b"));
+        DIFF_NUMBERS.add(Term.valueOf("b + c - a"));
+
+        // a * b / c
+        SAME_NUMBERS.add(Term.valueOf("a * b / c"));
+        DIFF_NUMBERS.add(Term.valueOf("a * c / b"));
+        DIFF_NUMBERS.add(Term.valueOf("b * c / a"));
+
+        // a * b + c
+        SAME_NUMBERS.add(Term.valueOf("a * b + c"));
+        DIFF_NUMBERS.add(Term.valueOf("a * c + b"));
+        DIFF_NUMBERS.add(Term.valueOf("b * c + a"));
+
+        // (a + b) * c
+        SAME_NUMBERS.add(Term.valueOf("(a + b) * c"));
+        DIFF_NUMBERS.add(Term.valueOf("(a + c) * b"));
+        DIFF_NUMBERS.add(Term.valueOf("(b + c) * a"));
+
+        // a * b - c
+        SAME_NUMBERS.add(Term.valueOf("a * b - c"));
+        DIFF_NUMBERS.add(Term.valueOf("a * c - b"));
+        DIFF_NUMBERS.add(Term.valueOf("b * c - a"));
+
+        // a - b * c
+        SAME_NUMBERS.add(Term.valueOf("a - b * c"));
+        DIFF_NUMBERS.add(Term.valueOf("b - a * c"));
+        DIFF_NUMBERS.add(Term.valueOf("c - a * b"));
+
+        // (a - b) * c
+        SAME_NUMBERS.add(Term.valueOf("(a - b) * c"));
+        DIFF_NUMBERS.add(Term.valueOf("(b - a) * c"));
+        DIFF_NUMBERS.add(Term.valueOf("(a - c) * b"));
+        DIFF_NUMBERS.add(Term.valueOf("(c - a) * b"));
+        DIFF_NUMBERS.add(Term.valueOf("(b - c) * a"));
+        DIFF_NUMBERS.add(Term.valueOf("(c - b) * a"));
+
+        // a / b + c
+        SAME_NUMBERS.add(Term.valueOf("a / b + c"));
+        DIFF_NUMBERS.add(Term.valueOf("b / a + c"));
+        DIFF_NUMBERS.add(Term.valueOf("a / c + b"));
+        DIFF_NUMBERS.add(Term.valueOf("c / a + b"));
+        DIFF_NUMBERS.add(Term.valueOf("b / c + a"));
+        DIFF_NUMBERS.add(Term.valueOf("c / b + a"));
+
+        // (a + b) / c
+        SAME_NUMBERS.add(Term.valueOf("(a + b) / c"));
+        DIFF_NUMBERS.add(Term.valueOf("(a + c) / b"));
+        DIFF_NUMBERS.add(Term.valueOf("(b + c) / a"));
+
+        // a / (b + c)
+        SAME_NUMBERS.add(Term.valueOf("a / (b + c)"));
+        DIFF_NUMBERS.add(Term.valueOf("b / (a + c)"));
+        DIFF_NUMBERS.add(Term.valueOf("c / (a + b)"));
+
+        // a / b - c
+        SAME_NUMBERS.add(Term.valueOf("a / b - c"));
+        DIFF_NUMBERS.add(Term.valueOf("a / c - b"));
+        DIFF_NUMBERS.add(Term.valueOf("b / a - a"));
+        DIFF_NUMBERS.add(Term.valueOf("b / c - a"));
+        DIFF_NUMBERS.add(Term.valueOf("c / a - b"));
+        DIFF_NUMBERS.add(Term.valueOf("c / b - a"));
+
+        // a - b / c
+        SAME_NUMBERS.add(Term.valueOf("a - b / c"));
+        DIFF_NUMBERS.add(Term.valueOf("a - c / b"));
+        DIFF_NUMBERS.add(Term.valueOf("b - a / a"));
+        DIFF_NUMBERS.add(Term.valueOf("b - c / a"));
+        DIFF_NUMBERS.add(Term.valueOf("c - a / b"));
+        DIFF_NUMBERS.add(Term.valueOf("c - b / a"));
+
+        // (a - b) / c
+        SAME_NUMBERS.add(Term.valueOf("(a - b) / c"));
+        DIFF_NUMBERS.add(Term.valueOf("(a - c) / b"));
+        DIFF_NUMBERS.add(Term.valueOf("(b - a) / a"));
+        DIFF_NUMBERS.add(Term.valueOf("(b - c) / a"));
+        DIFF_NUMBERS.add(Term.valueOf("(c - a) / b"));
+        DIFF_NUMBERS.add(Term.valueOf("(c - b) / a"));
+
+        // a / (b - c)
+        SAME_NUMBERS.add(Term.valueOf("a / (b - c)"));
+        DIFF_NUMBERS.add(Term.valueOf("a / (c - b)"));
+        DIFF_NUMBERS.add(Term.valueOf("b / (a - a)"));
+        DIFF_NUMBERS.add(Term.valueOf("b / (c - a)"));
+        DIFF_NUMBERS.add(Term.valueOf("c / (a - b)"));
+        DIFF_NUMBERS.add(Term.valueOf("c / (b - a)"));
+    }
 
     TermAlgorithm() {
         super("Algorithm based on variable terms");
-        terms = new ArrayList<>();
-
-        // a + b + c
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.PLUS).op(Operator.PLUS).var(A).var(B).var(C).build());
-        // a - b - c
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.MINUS).op(Operator.MINUS).var(A).var(B).var(C).build());
-        // a * b * c
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.TIMES).op(Operator.TIMES).var(A).var(B).var(C).build());
-        // a / b / c
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.DIVIDED).op(Operator.DIVIDED).var(A).var(B).var(C).build());
-        // a + b - c
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.MINUS).op(Operator.PLUS).var(A).var(B).var(C).build());
-        // a * b / c
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.DIVIDED).op(Operator.TIMES).var(A).var(B).var(C).build());
-        // a * b + c
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.PLUS).op(Operator.TIMES).var(A).var(B).var(C).build());
-        // (a + b) * c
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.TIMES).op(Operator.PLUS).var(A).var(B).var(C).build());
-        // a * b - c
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.MINUS).op(Operator.TIMES).var(A).var(B).var(C).build());
-        // a - b * c
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.MINUS).var(A).op(Operator.TIMES).var(B).var(C).build());
-        // (a - b) * c
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.TIMES).op(Operator.MINUS).var(A).var(B).var(C).build());
-        // a / b + c
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.PLUS).op(Operator.DIVIDED).var(A).var(B).var(C).build());
-        // (a + b) / c
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.DIVIDED).op(Operator.PLUS).var(A).var(B).var(C).build());
-        // a / (b + c)
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.DIVIDED).var(A).op(Operator.PLUS).var(B).var(C).build());
-        // a / b - c
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.MINUS).op(Operator.DIVIDED).var(A).var(B).var(C).build());
-        // a - b / c
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.MINUS).var(A).op(Operator.DIVIDED).var(B).var(C).build());
-        // (a - b) / c
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.DIVIDED).op(Operator.MINUS).var(A).var(B).var(C).build());
-        // a / (b - c)
-        terms.add(new TermBuilder(LEFT_RIGHT).op(Operator.DIVIDED).var(A).op(Operator.MINUS).var(B).var(C).build());
     }
 
     @SuppressWarnings("Duplicates")
     @Override
     protected void computePermutation(final int a, final int b, final int c, final int target, final Solutions solutions) {
-        final Iterator<Term> iter = terms.iterator();
-
-        // a + b + c
-        Term term = iter.next();
-        add(term.assign(a, b, c), solutions);
-
-        // a - b - c
-        term = iter.next();
-        add(term.assign(a, b, c), solutions);
-        if (!sameDiceNumbers(a, b, c)) {
-            add(term.assign(b, a, c), solutions);
-            add(term.assign(c, a, b), solutions);
+        final Assignment[] assignments = new Assignment[] { new Assignment("a", a), new Assignment("b", b),
+                new Assignment("c", c) };
+        for (final Term term : SAME_NUMBERS) {
+            try {
+                solutions.add(new Solution(term.print(assignments), term.eval(assignments)));
+            } catch (final TermException ignore) {
+            }
         }
-
-        // a * b * c
-        term = iter.next();
-        add(term.assign(a, b, c), solutions);
-
-        // a / b / c
-        term = iter.next();
-        add(term.assign(a, b, c), solutions);
         if (!sameDiceNumbers(a, b, c)) {
-            add(term.assign(b, a, c), solutions);
-            add(term.assign(c, a, b), solutions);
-        }
-
-        // a + b - c
-        term = iter.next();
-        add(term.assign(b, c, a), solutions);
-        if (!sameDiceNumbers(a, b, c)) {
-            add(term.assign(a, c, b), solutions);
-            add(term.assign(a, b, c), solutions);
-        }
-
-        // a * b / c
-        term = iter.next();
-        add(term.assign(b, c, a), solutions);
-        if (!sameDiceNumbers(a, b, c)) {
-            add(term.assign(a, c, b), solutions);
-            add(term.assign(a, b, c), solutions);
-        }
-
-        // a * b + c
-        term = iter.next();
-        add(term.assign(a, b, c), solutions);
-        if (!sameDiceNumbers(a, b, c)) {
-            add(term.assign(a, c, b), solutions);
-            add(term.assign(b, c, a), solutions);
-        }
-
-        // (a + b) * c
-        term = iter.next();
-        add(term.assign(a, b, c), solutions);
-        if (!sameDiceNumbers(a, b, c)) {
-            add(term.assign(a, c, b), solutions);
-            add(term.assign(b, c, a), solutions);
-        }
-
-        // a * b - c
-        term = iter.next();
-        add(term.assign(a, b, c), solutions);
-        if (!sameDiceNumbers(a, b, c)) {
-            add(term.assign(a, c, b), solutions);
-            add(term.assign(b, c, a), solutions);
-        }
-
-        // a - b * c
-        term = iter.next();
-        add(term.assign(a, b, c), solutions);
-        if (!sameDiceNumbers(a, b, c)) {
-            add(term.assign(b, a, c), solutions);
-            add(term.assign(c, a, b), solutions);
-        }
-
-        // (a - b) * c
-        term = iter.next();
-        add(term.assign(a, b, c), solutions);
-        if (!sameDiceNumbers(a, b, c)) {
-            add(term.assign(b, a, c), solutions);
-            add(term.assign(a, c, b), solutions);
-            add(term.assign(c, a, b), solutions);
-            add(term.assign(b, c, a), solutions);
-            add(term.assign(c, b, a), solutions);
-        }
-
-        // a / b + c
-        term = iter.next();
-        add(term.assign(a, b, c), solutions);
-        if (!sameDiceNumbers(a, b, c)) {
-            add(term.assign(b, a, c), solutions);
-            add(term.assign(a, c, b), solutions);
-            add(term.assign(c, a, b), solutions);
-            add(term.assign(b, c, a), solutions);
-            add(term.assign(c, b, a), solutions);
-        }
-
-        // (a + b) / c
-        term = iter.next();
-        add(term.assign(a, b, c), solutions);
-        if (!sameDiceNumbers(a, b, c)) {
-            add(term.assign(a, c, b), solutions);
-            add(term.assign(b, c, a), solutions);
-        }
-
-        // a / (b + c)
-        term = iter.next();
-        add(term.assign(a, b, c), solutions);
-        if (!sameDiceNumbers(a, b, c)) {
-            add(term.assign(b, a, c), solutions);
-            add(term.assign(c, a, b), solutions);
-        }
-
-        // a / b - c
-        term = iter.next();
-        add(term.assign(a, b, c), solutions);
-        if (!sameDiceNumbers(a, b, c)) {
-            add(term.assign(a, c, b), solutions);
-            add(term.assign(b, a, a), solutions);
-            add(term.assign(b, c, a), solutions);
-            add(term.assign(c, a, b), solutions);
-            add(term.assign(c, b, a), solutions);
-        }
-
-        // a - b / c
-        term = iter.next();
-        add(term.assign(a, b, c), solutions);
-        if (!sameDiceNumbers(a, b, c)) {
-            add(term.assign(a, c, b), solutions);
-            add(term.assign(b, a, a), solutions);
-            add(term.assign(b, c, a), solutions);
-            add(term.assign(c, a, b), solutions);
-            add(term.assign(c, b, a), solutions);
-        }
-
-        // (a - b) / c
-        term = iter.next();
-        add(term.assign(a, b, c), solutions);
-        if (!sameDiceNumbers(a, b, c)) {
-            add(term.assign(a, c, b), solutions);
-            add(term.assign(b, a, a), solutions);
-            add(term.assign(b, c, a), solutions);
-            add(term.assign(c, a, b), solutions);
-            add(term.assign(c, b, a), solutions);
-        }
-
-        // a / (b - c)
-        term = iter.next();
-        add(term.assign(a, b, c), solutions);
-        if (!sameDiceNumbers(a, b, c)) {
-            add(term.assign(a, c, b), solutions);
-            add(term.assign(b, a, a), solutions);
-            add(term.assign(b, c, a), solutions);
-            add(term.assign(c, a, b), solutions);
-            add(term.assign(c, b, a), solutions);
-        }
-    }
-
-    private void add(final Term term, final Solutions solutions) {
-        try {
-            solutions.add(new Solution(term.print(), term.eval()));
-        } catch (final ArithmeticException ignore) {
-            // no valid result
+            for (final Term term : DIFF_NUMBERS) {
+                try {
+                    solutions.add(new Solution(term.print(assignments), term.eval(assignments)));
+                } catch (final TermException ignore) {
+                }
+            }
         }
     }
 }

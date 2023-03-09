@@ -18,7 +18,7 @@ package io.schlawiner.engine.game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.schlawiner.engine.term.TermParser;
+import io.schlawiner.engine.term.Term;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -34,28 +34,28 @@ class DiceValidatorTest {
 
     @Test
     void twoNumbers() {
-        assertThrows(ArithmeticException.class, () -> DiceValidator.validate(dice, TermParser.parse("1 + 2")));
+        assertThrows(DiceException.class, () -> DiceValidator.validate(dice, Term.valueOf("1 + 2")));
     }
 
     @Test
     void fourNumbers() {
-        assertThrows(ArithmeticException.class, () -> DiceValidator.validate(dice, TermParser.parse("1 + 2 + 3 + 4")));
+        assertThrows(DiceException.class, () -> DiceValidator.validate(dice, Term.valueOf("1 + 2 + 3 + 4")));
     }
 
     @Test
     void wrongNumbers() {
-        assertThrows(ArithmeticException.class, () -> DiceValidator.validate(dice, TermParser.parse("1 + 2 + 4")));
+        assertThrows(DiceException.class, () -> DiceValidator.validate(dice, Term.valueOf("1 + 2 + 4")));
     }
 
     @Test
     void wrongMultiplier() {
-        assertThrows(ArithmeticException.class, () -> DiceValidator.validate(dice, TermParser.parse("1 + 2 + 3000")));
+        assertThrows(DiceException.class, () -> DiceValidator.validate(dice, Term.valueOf("1 + 2 + 3000")));
     }
 
     @Test
     void validate() {
-        DiceValidator.validate(dice, TermParser.parse("1 + 2 + 3"));
-        DiceValidator.validate(dice, TermParser.parse("1 + 20 + 300"));
+        DiceValidator.validate(dice, Term.valueOf("1 + 2 + 3"));
+        DiceValidator.validate(dice, Term.valueOf("1 + 20 + 300"));
     }
 
     @Test

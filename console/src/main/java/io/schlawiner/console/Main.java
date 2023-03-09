@@ -26,6 +26,7 @@ import io.schlawiner.engine.algorithm.OperationAlgorithm;
 import io.schlawiner.engine.algorithm.Solution;
 import io.schlawiner.engine.game.Calculation;
 import io.schlawiner.engine.game.Dice;
+import io.schlawiner.engine.game.DiceException;
 import io.schlawiner.engine.game.Game;
 import io.schlawiner.engine.game.Level;
 import io.schlawiner.engine.game.Numbers;
@@ -33,6 +34,7 @@ import io.schlawiner.engine.game.Player;
 import io.schlawiner.engine.game.Players;
 import io.schlawiner.engine.game.Settings;
 import io.schlawiner.engine.score.Score;
+import io.schlawiner.engine.term.TermException;
 
 import static java.util.stream.Collectors.joining;
 
@@ -176,8 +178,8 @@ public class Main {
                             game.score(calculation.term(), calculation.difference());
                             validTerm = true;
                         }
-                    } catch (final ArithmeticException e) {
-                        terminal.printf("No valid term '%s': %s%n", expression, e.getMessage());
+                    } catch (final TermException | DiceException e) {
+                        terminal.printf("%s%n", e.getMessage());
                     }
                 }
             } else {

@@ -13,20 +13,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package io.schlawiner.engine.term;
+package io.schlawiner.engine.game;
 
-/** Node of a binary tree */
-public sealed interface Node permits Term, Variable, Value {
+public class DiceException extends RuntimeException {
 
-    Node getParent();
-
-    void setParent(Node parent);
-
-    Node getLeft();
-
-    void setLeft(Node left);
-
-    Node getRight();
-
-    void setRight(Node right);
+    public DiceException(final String message) {
+        super(message);
+    }
 }

@@ -146,6 +146,9 @@
                         <groups>java.,jakarta.,org.,io.,com.</groups>
                         <removeUnused>true</removeUnused>
                         <staticAfter>true</staticAfter>
+                        <excludes>
+                            <exclude>**/Node.java</exclude>
+                        </excludes>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -192,6 +195,12 @@
                             <version>${version.checkstyle.config}</version>
                         </dependency>
                     </dependencies>
+                </plugin>
+                <plugin><groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <compilerArgs>--enable-preview</compilerArgs>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

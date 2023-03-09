@@ -51,6 +51,10 @@ public enum Operator {
         this.precedence = precedence;
     }
 
+    public static boolean isOperator(final String token) {
+        return toOperator(token) != null;
+    }
+
     public static Operator toOperator(final String token) {
         if (token != null) {
             return switch (token) {

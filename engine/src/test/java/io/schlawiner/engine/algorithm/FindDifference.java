@@ -15,8 +15,6 @@
  */
 package io.schlawiner.engine.algorithm;
 
-import static java.lang.System.out;
-
 public final class FindDifference {
 
     private static final int[][] DICE_NUMBER_COMBINATIONS = new int[][] { { 1, 1, 1 }, { 1, 1, 2 }, { 1, 1, 3 }, { 1, 1, 4 },
@@ -31,7 +29,7 @@ public final class FindDifference {
         int allowedDifference = 0;
         while (true) {
             boolean solutionForAnyCombination = true;
-            out.printf("Checking %2d%n", allowedDifference);
+            System.out.printf("Checking %2d%n", allowedDifference);
             final Algorithm algorithm = new OperationAlgorithm(allowedDifference);
 
             mainLoop: for (int target = 1; target < 101; target++) {
@@ -45,7 +43,7 @@ public final class FindDifference {
             }
 
             if (solutionForAnyCombination) {
-                out.println("\nMax difference: " + allowedDifference);
+                System.out.println("\nMax difference: " + allowedDifference);
                 break;
             }
             allowedDifference++;

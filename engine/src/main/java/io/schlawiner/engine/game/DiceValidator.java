@@ -27,27 +27,27 @@ public final class DiceValidator {
     private static final int[] MULTIPLIERS = new int[] { 1, 10, 100 };
     private static final Pattern NUMBERS = Pattern.compile("\\d+");
 
-    static void validate(final Dice dice, final Term term) throws ArithmeticException {
+    static void validate(final Dice dice, final Term term) throws DiceException {
         final int[] values = term.getValues();
         if (values.length < dice.numbers().length) {
-            throw new ArithmeticException("The term contains not all dice numbers.");
+            throw new DiceException("The term contains not all dice numbers.");
         } else if (values.length > dice.numbers().length) {
-            throw new ArithmeticException("The term contains more numbers than diced.");
+            throw new DiceException("The term contains more numbers than diced.");
         } else {
             final boolean[] used = internalUsed(dice, values);
             for (final boolean b : used) {
                 if (!b) {
-                    throw new ArithmeticException("You have not used all the dice numbers.");
+                    throw new DiceException("You have not used all the dice numbers.");
                 }
             }
         }
     }
 
     /**
-     * Count used number of a probably invalid term.
+     * Count used number of a probably invalid expression (not yet parsed term).
      */
-    static boolean[] used(final Dice dice, final String term) {
-        final int[] termNumbers = extractTermNumbers(term);
+    static boolean[] used(final Dice dice, final String expression) {
+        final int[] termNumbers = extractTermNumbers(expression);
         return internalUsed(dice, termNumbers);
     }
 
@@ -69,19 +69,19 @@ public final class DiceValidator {
         return used;
     }
 
-    private static int[] extractTermNumbers(final String term) {
-        if (term == null || term.trim().length() == 0) {
+    private static int[] extractTermNumbers(final String expression) {
+        if (expression == null || expression.trim().length() == 0) {
             return new int[0];
         }
 
-        final Matcher matcher = NUMBERS.matcher(term);
+        final Matcher matcher = NUMBERS.matcher(expression);
         final List<Integer> numbers = new ArrayList<>();
         while (matcher.find()) {
             final String number = matcher.group();
             try {
                 numbers.add(Integer.valueOf(number));
             } catch (final NumberFormatException e) {
-                throw new ArithmeticException(number + " is invalid");
+                throw new DiceException(String.format("Invalid number %s", number));
             }
         }
         int index = 0;

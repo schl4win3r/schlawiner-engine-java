@@ -16,55 +16,52 @@
 package io.schlawiner.engine.term;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
-import static io.schlawiner.engine.util.Iterators.forArray;
+public final class Term implements Node {
 
-public class Term implements Node {
+    public static Term valueOf(final String expression) throws TermException {
+        return TermParser.parse(expression);
+    }
 
     private final Operator operator;
     private Node parent;
     private Node left;
     private Node right;
+    boolean hasVariables;
 
     Term(final Operator operator) {
         this.operator = operator;
+        this.hasVariables = false;
     }
 
-    public int eval(final Integer... values) {
-        assign(values);
-        return new EvalIterator().eval(this);
+    public int eval(final Assignment... assignments) {
+        if (hasVariables && assignments.length == 0) {
+            throw new TermException(String.format("Unable to eval term. No assignments for %s", getVariables()));
+        }
+        return new EvalIterator().eval(this, Assignment.byName(assignments));
     }
 
-    public String print() {
-        return new PrintIterator().print(this);
+    public String print(final Assignment... assignments) {
+        return new PrintIterator().print(this, Assignment.byName(assignments));
     }
 
     boolean isComplete() {
         return left != null && right != null;
     }
 
-    Term assign(final String name, final int value) {
-        final Variable v = new VariableIterator().search(this, name);
-        if (v != null) {
-            v.setValue(value);
-        }
-        return this;
-    }
-
-    public Term assign(final Integer... values) {
-        new AssignValuesIterator().assign(this, values);
-        return this;
-    }
-
     public int[] getValues() {
-        return new ValuesIterator().values(this);
+        return new GetValuesIterator().values(this);
     }
 
     public List<Operator> getOperators() {
-        return new OperatorsIterator().operators(this);
+        return new GetOperatorsIterator().operators(this);
+    }
+
+    public List<Variable> getVariables() {
+        return new GetVariablesIterator().variables(this);
     }
 
     @Override
@@ -103,16 +100,16 @@ public class Term implements Node {
 
     static class EvalIterator {
 
-        int eval(final Node node) {
+        int eval(final Node node, final Map<String, Integer> assignments) {
             final Stack<Integer> stack = new Stack<>();
-            postOrder(node, stack);
+            postOrder(node, stack, assignments);
             return stack.pop();
         }
 
-        private void postOrder(final Node node, final Stack<Integer> stack) {
+        private void postOrder(final Node node, final Stack<Integer> stack, final Map<String, Integer> assignments) {
             if (node instanceof final Term t) {
-                postOrder(node.getLeft(), stack);
-                postOrder(node.getRight(), stack);
+                postOrder(node.getLeft(), stack, assignments);
+                postOrder(node.getRight(), stack, assignments);
                 final int right = stack.pop();
                 final int left = stack.pop();
                 final int result = switch (t.operator) {
@@ -121,49 +118,55 @@ public class Term implements Node {
                     case TIMES -> left * right;
                     case DIVIDED -> {
                         if (right == 0 || left % right != 0) {
-                            throw new ArithmeticException("Illegal division: " + left + " / " + right);
+                            throw new TermException("Illegal division: " + left + " / " + right);
                         }
                         yield left / right;
                     }
                 };
                 stack.push(result);
             } else if (node instanceof final Variable v) {
-                if (!v.isAssigned()) {
-                    throw new ArithmeticException("Variable is not assigned");
+                if (!assignments.containsKey(v.name)) {
+                    throw new TermException(String.format("Unable to eval term. Missing assignment %s", v.name));
                 }
-                stack.push(v.getValue());
+                stack.push(assignments.get(v.name));
+            } else if (node instanceof final Value v) {
+                stack.push(v.value);
             }
         }
     }
 
     static class PrintIterator {
 
-        String print(final Node node) {
+        String print(final Node node, final Map<String, Integer> assignments) {
             final StringBuilder builder = new StringBuilder();
-            inOrder(node, builder);
+            inOrder(node, assignments, builder);
             return builder.toString();
         }
 
-        private void inOrder(final Node node, final StringBuilder builder) {
+        private void inOrder(final Node node, final Map<String, Integer> assignments, final StringBuilder builder) {
             if (node != null) {
-                inOrder(node.getLeft(), builder);
-                if (node instanceof final Variable v) {
-                    final boolean bracket = needsBracket(v);
-                    if (bracket && v == v.getParent().getLeft()) {
+                inOrder(node.getLeft(), assignments, builder);
+                if (node instanceof Variable || node instanceof Value) {
+                    final boolean bracket = needsBracket(node);
+                    if (bracket && node == node.getParent().getLeft()) {
                         builder.append("(");
                     }
-                    if (v.isAssigned()) {
-                        builder.append(v.getValue());
+                    if (node instanceof final Variable var) {
+                        if (assignments.containsKey(var.name)) {
+                            builder.append(assignments.get(var.name));
+                        } else {
+                            builder.append(var.name);
+                        }
                     } else {
-                        builder.append(v.getName());
+                        builder.append(node);
                     }
-                    if (bracket && v == v.getParent().getRight()) {
+                    if (bracket && node == node.getParent().getRight()) {
                         builder.append(")");
                     }
                 } else if (node instanceof final Term e) {
                     builder.append(" ").append(e.operator).append(" ");
                 }
-                inOrder(node.getRight(), builder);
+                inOrder(node.getRight(), assignments, builder);
             }
         }
 
@@ -176,25 +179,7 @@ public class Term implements Node {
         }
     }
 
-    static class AssignValuesIterator {
-
-        void assign(final Term term, final Integer... values) {
-            final Iterator<Integer> iterator = forArray(values);
-            inOrder(term, iterator);
-        }
-
-        private void inOrder(final Node node, final Iterator<Integer> iterator) {
-            if (node != null && iterator.hasNext()) {
-                inOrder(node.getLeft(), iterator);
-                if (node instanceof final Variable v) {
-                    v.setValue(iterator.next());
-                }
-                inOrder(node.getRight(), iterator);
-            }
-        }
-    }
-
-    static class ValuesIterator {
+    static class GetValuesIterator {
 
         int[] values(final Term term) {
             final List<Integer> numbers = new ArrayList<>();
@@ -205,17 +190,34 @@ public class Term implements Node {
         private void inOrder(final Node node, final List<Integer> numbers) {
             if (node != null) {
                 inOrder(node.getLeft(), numbers);
-                if (node instanceof final Variable v) {
-                    if (v.getValue() != Variable.DEFAULT_VALUE) {
-                        numbers.add(v.getValue());
-                    }
+                if (node instanceof final Value v) {
+                    numbers.add(v.value);
                 }
                 inOrder(node.getRight(), numbers);
             }
         }
     }
 
-    static class OperatorsIterator {
+    static class GetVariablesIterator {
+
+        List<Variable> variables(final Term term) {
+            final List<Variable> variables = new ArrayList<>();
+            inOrder(term, variables);
+            return variables;
+        }
+
+        private void inOrder(final Node node, final List<Variable> variables) {
+            if (node != null) {
+                inOrder(node.getLeft(), variables);
+                if (node instanceof final Variable v) {
+                    variables.add(v);
+                }
+                inOrder(node.getRight(), variables);
+            }
+        }
+    }
+
+    static class GetOperatorsIterator {
         List<Operator> operators(final Term term) {
             final List<Operator> operators = new ArrayList<>();
             inOrder(term, operators);
@@ -229,27 +231,6 @@ public class Term implements Node {
                     operators.add(t.operator);
                 }
                 inOrder(node.getRight(), operators);
-            }
-        }
-    }
-
-    static class VariableIterator {
-
-        Variable search(final Term term, final String name) {
-            final Variable[] result = new Variable[1];
-            inOrder(term, name, result);
-            return result[0];
-        }
-
-        private void inOrder(final Node node, final String name, final Variable[] result) {
-            if (node != null && result[0] == null) {
-                inOrder(node.getLeft(), name, result);
-                if (node instanceof final Variable v) {
-                    if (name.equals(v.getName())) {
-                        result[0] = v;
-                    }
-                }
-                inOrder(node.getRight(), name, result);
             }
         }
     }
