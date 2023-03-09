@@ -39,9 +39,9 @@ public final class Iterators {
         }
     }
 
-    private static final class ArrayItr<T> extends AbstractIndexedListIterator<T> {
+    private static class ArrayItr<T> extends AbstractIndexedListIterator<T> {
 
-        static final UnmodifiableListIterator<Object> EMPTY = new ArrayItr<>(new Object[0], 0, 0, 0);
+        static UnmodifiableListIterator<Object> EMPTY = new ArrayItr<>(new Object[0], 0, 0, 0);
 
         private final T[] array;
         private final int offset;
@@ -113,7 +113,7 @@ public final class Iterators {
         if (length < 0) {
             throw new IllegalArgumentException();
         }
-        final int end = offset + length;
+        int end = offset + length;
 
         // Technically we should give a slightly more descriptive error on overflow
         Preconditions.checkPositionIndexes(offset, end, array.length);

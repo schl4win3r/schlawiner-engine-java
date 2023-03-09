@@ -48,7 +48,7 @@ class InfixToRPNTest {
     @Test
     void permutations() {
         for (int i = 0; i < PERMUTATIONS.length; i++) {
-            final String[] permutation = PERMUTATIONS[i];
+            String[] permutation = PERMUTATIONS[i];
             assertEquals(permutation[1], String.join(" ", InfixToRPN.infixToRPN(permutation[0])), "Failed at index " + i);
         }
     }

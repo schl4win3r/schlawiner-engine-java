@@ -82,7 +82,7 @@ public class PlayerScore {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof final PlayerScore that)) {
+        if (!(o instanceof PlayerScore that)) {
             return false;
         }
 

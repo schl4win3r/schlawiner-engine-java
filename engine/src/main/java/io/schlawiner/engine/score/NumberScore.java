@@ -81,7 +81,7 @@ public class NumberScore {
         this.index = index;
         this.number = number;
         this.scores = new LinkedHashMap<>();
-        for (final Player player : players) {
+        for (Player player : players) {
             scores.put(player, Score.EMPTY);
         }
     }
@@ -91,7 +91,7 @@ public class NumberScore {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof final NumberScore numberScore)) {
+        if (!(o instanceof NumberScore numberScore)) {
             return false;
         }
 
@@ -113,7 +113,7 @@ public class NumberScore {
     }
 
     Score getScore(final Player player) {
-        final Score score = scores.get(player);
+        Score score = scores.get(player);
         if (score != null) {
             return score;
         }
@@ -121,7 +121,7 @@ public class NumberScore {
     }
 
     boolean hasScore(final Player player) {
-        final Score score = scores.get(player);
+        Score score = scores.get(player);
         return score != null && score != Score.EMPTY;
     }
 

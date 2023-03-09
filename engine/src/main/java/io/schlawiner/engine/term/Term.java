@@ -101,18 +101,18 @@ public final class Term implements Node {
     static class EvalIterator {
 
         int eval(final Node node, final Map<String, Integer> assignments) {
-            final Stack<Integer> stack = new Stack<>();
+            Stack<Integer> stack = new Stack<>();
             postOrder(node, stack, assignments);
             return stack.pop();
         }
 
         private void postOrder(final Node node, final Stack<Integer> stack, final Map<String, Integer> assignments) {
-            if (node instanceof final Term t) {
+            if (node instanceof Term t) {
                 postOrder(node.getLeft(), stack, assignments);
                 postOrder(node.getRight(), stack, assignments);
-                final int right = stack.pop();
-                final int left = stack.pop();
-                final int result = switch (t.operator) {
+                int right = stack.pop();
+                int left = stack.pop();
+                int result = switch (t.operator) {
                     case PLUS -> left + right;
                     case MINUS -> left - right;
                     case TIMES -> left * right;
@@ -124,12 +124,12 @@ public final class Term implements Node {
                     }
                 };
                 stack.push(result);
-            } else if (node instanceof final Variable v) {
+            } else if (node instanceof Variable v) {
                 if (!assignments.containsKey(v.name)) {
                     throw new TermException(String.format("Unable to eval term. Missing assignment %s", v.name));
                 }
                 stack.push(assignments.get(v.name));
-            } else if (node instanceof final Value v) {
+            } else if (node instanceof Value v) {
                 stack.push(v.value);
             }
         }
@@ -138,7 +138,7 @@ public final class Term implements Node {
     static class PrintIterator {
 
         String print(final Node node, final Map<String, Integer> assignments) {
-            final StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
             inOrder(node, assignments, builder);
             return builder.toString();
         }
@@ -147,11 +147,11 @@ public final class Term implements Node {
             if (node != null) {
                 inOrder(node.getLeft(), assignments, builder);
                 if (node instanceof Variable || node instanceof Value) {
-                    final boolean bracket = needsBracket(node);
+                    boolean bracket = needsBracket(node);
                     if (bracket && node == node.getParent().getLeft()) {
                         builder.append("(");
                     }
-                    if (node instanceof final Variable var) {
+                    if (node instanceof Variable var) {
                         if (assignments.containsKey(var.name)) {
                             builder.append(assignments.get(var.name));
                         } else {
@@ -163,7 +163,7 @@ public final class Term implements Node {
                     if (bracket && node == node.getParent().getRight()) {
                         builder.append(")");
                     }
-                } else if (node instanceof final Term e) {
+                } else if (node instanceof Term e) {
                     builder.append(" ").append(e.operator).append(" ");
                 }
                 inOrder(node.getRight(), assignments, builder);
@@ -171,8 +171,8 @@ public final class Term implements Node {
         }
 
         private boolean needsBracket(final Node node) {
-            if (node.getParent() instanceof final Term parent && node.getParent().getParent() instanceof Term) {
-                final Term grandparent = (Term) parent.getParent();
+            if (node.getParent() instanceof Term parent && node.getParent().getParent() instanceof Term) {
+                Term grandparent = (Term) parent.getParent();
                 return parent.operator.precedence() < grandparent.operator.precedence();
             }
             return false;
@@ -182,7 +182,7 @@ public final class Term implements Node {
     static class GetValuesIterator {
 
         int[] values(final Term term) {
-            final List<Integer> numbers = new ArrayList<>();
+            List<Integer> numbers = new ArrayList<>();
             inOrder(term, numbers);
             return numbers.stream().mapToInt(Integer::intValue).toArray();
         }
@@ -190,7 +190,7 @@ public final class Term implements Node {
         private void inOrder(final Node node, final List<Integer> numbers) {
             if (node != null) {
                 inOrder(node.getLeft(), numbers);
-                if (node instanceof final Value v) {
+                if (node instanceof Value v) {
                     numbers.add(v.value);
                 }
                 inOrder(node.getRight(), numbers);
@@ -201,7 +201,7 @@ public final class Term implements Node {
     static class GetVariablesIterator {
 
         List<Variable> variables(final Term term) {
-            final List<Variable> variables = new ArrayList<>();
+            List<Variable> variables = new ArrayList<>();
             inOrder(term, variables);
             return variables;
         }
@@ -209,7 +209,7 @@ public final class Term implements Node {
         private void inOrder(final Node node, final List<Variable> variables) {
             if (node != null) {
                 inOrder(node.getLeft(), variables);
-                if (node instanceof final Variable v) {
+                if (node instanceof Variable v) {
                     variables.add(v);
                 }
                 inOrder(node.getRight(), variables);
@@ -219,7 +219,7 @@ public final class Term implements Node {
 
     static class GetOperatorsIterator {
         List<Operator> operators(final Term term) {
-            final List<Operator> operators = new ArrayList<>();
+            List<Operator> operators = new ArrayList<>();
             inOrder(term, operators);
             return operators;
         }
@@ -227,7 +227,7 @@ public final class Term implements Node {
         private void inOrder(final Node node, final List<Operator> operators) {
             if (node != null) {
                 inOrder(node.getLeft(), operators);
-                if (node instanceof final Term t) {
+                if (node instanceof Term t) {
                     operators.add(t.operator);
                 }
                 inOrder(node.getRight(), operators);

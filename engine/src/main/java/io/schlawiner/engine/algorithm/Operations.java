@@ -115,4 +115,7 @@ final class Operations {
     static Solution subtractMultiply(final int a, final int b, final int c) {
         return new Solution("(" + a + " - " + b + ") * " + c, (a - b) * c);
     }
+
+    private Operations() {
+    }
 }

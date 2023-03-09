@@ -22,6 +22,7 @@ import io.schlawiner.engine.game.Numbers;
 import io.schlawiner.engine.game.Player;
 
 class PlayerScoreTest {
+
     private Player foo;
     private Numbers numbers;
     private Score one = new Score("1", 1);

@@ -30,11 +30,11 @@ public final class FindDifference {
         while (true) {
             boolean solutionForAnyCombination = true;
             System.out.printf("Checking %2d%n", allowedDifference);
-            final Algorithm algorithm = new OperationAlgorithm(allowedDifference);
+            Algorithm algorithm = new OperationAlgorithm(allowedDifference);
 
             mainLoop: for (int target = 1; target < 101; target++) {
-                for (final int[] dnc : DICE_NUMBER_COMBINATIONS) {
-                    final Solutions solutions = algorithm.compute(dnc[0], dnc[1], dnc[2], target);
+                for (int[] dnc : DICE_NUMBER_COMBINATIONS) {
+                    Solutions solutions = algorithm.compute(dnc[0], dnc[1], dnc[2], target);
                     if (solutions.size() == 0) {
                         solutionForAnyCombination = false;
                         break mainLoop;

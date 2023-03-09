@@ -41,12 +41,12 @@ abstract class AbstractIndexedListIterator<E> extends UnmodifiableListIterator<E
     }
 
     @Override
-    public final boolean hasNext() {
+    public boolean hasNext() {
         return position < size;
     }
 
     @Override
-    public final E next() {
+    public E next() {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
@@ -54,17 +54,17 @@ abstract class AbstractIndexedListIterator<E> extends UnmodifiableListIterator<E
     }
 
     @Override
-    public final int nextIndex() {
+    public int nextIndex() {
         return position;
     }
 
     @Override
-    public final boolean hasPrevious() {
+    public boolean hasPrevious() {
         return position > 0;
     }
 
     @Override
-    public final E previous() {
+    public E previous() {
         if (!hasPrevious()) {
             throw new NoSuchElementException();
         }
@@ -72,7 +72,7 @@ abstract class AbstractIndexedListIterator<E> extends UnmodifiableListIterator<E
     }
 
     @Override
-    public final int previousIndex() {
+    public int previousIndex() {
         return position - 1;
     }
 }

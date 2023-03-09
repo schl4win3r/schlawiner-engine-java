@@ -35,8 +35,8 @@ public class Game {
     private final Numbers numbers;
     private final Algorithm algorithm;
     private final Settings settings;
-    private Dice dice;
     private final Scoreboard scoreboard;
+    private Dice dice;
     private boolean canceled;
 
     /** Starts a new game. The retry counter of all human players is set to {@link Settings#retries()}. */
@@ -57,7 +57,7 @@ public class Game {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof final Game game)) {
+        if (!(o instanceof Game game)) {
             return false;
         }
         return id.equals(game.id);
@@ -96,7 +96,7 @@ public class Game {
      * @return {@code true} if retry was successful, {@code false} otherwise
      */
     public boolean retry() {
-        final Player currentPlayer = players.current();
+        Player currentPlayer = players.current();
         if (currentPlayer.human() && currentPlayer.retries() > 0) {
             currentPlayer.retry();
             dice(Dice.random());
@@ -132,15 +132,14 @@ public class Game {
      * @return the difference between the calculated solution and the current number
      */
     public Calculation calculate(final String expression) {
-        final Calculation calculation;
-        final Term term = Term.valueOf(expression);
+        Calculation calculation;
+        Term term = Term.valueOf(expression);
         DiceValidator.validate(dice, term);
 
-        final int result = term.eval();
-        final int difference = abs(result - numbers.current());
+        int result = term.eval();
+        int difference = abs(result - numbers.current());
         if (difference > 0) {
-            final Solutions solutions = algorithm.compute(dice.numbers()[0], dice.numbers()[1], dice.numbers()[2],
-                    numbers.current());
+            Solutions solutions = algorithm.compute(dice.numbers()[0], dice.numbers()[1], dice.numbers()[2], numbers.current());
             calculation = new Calculation(term, difference, numbers.current(), solutions.bestSolution());
         } else {
             calculation = new Calculation(term, difference, numbers.current(), new Solution(term.print(), term.eval()));
@@ -157,8 +156,7 @@ public class Game {
      * @return the best solution based on the level
      */
     public Solution solve() {
-        final Solutions solutions = algorithm.compute(dice.numbers()[0], dice.numbers()[1], dice.numbers()[2],
-                numbers.current());
+        Solutions solutions = algorithm.compute(dice.numbers()[0], dice.numbers()[1], dice.numbers()[2], numbers.current());
         return solutions.bestSolution(settings.level());
     }
 

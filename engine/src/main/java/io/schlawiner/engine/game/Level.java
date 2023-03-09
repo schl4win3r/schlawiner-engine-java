@@ -16,6 +16,7 @@
 package io.schlawiner.engine.game;
 
 public enum Level {
+
     EASY(4), MEDIUM(2), HARD(0);
 
     private final int maxDifference;

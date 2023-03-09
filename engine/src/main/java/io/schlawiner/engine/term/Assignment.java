@@ -21,8 +21,8 @@ import java.util.Map;
 public record Assignment(String name, int value) {
 
     static Map<String, Integer> byName(final Assignment... assignments) {
-        final Map<String, Integer> assignmentsByName = new HashMap<>();
-        for (final Assignment assignment : assignments) {
+        Map<String, Integer> assignmentsByName = new HashMap<>();
+        for (Assignment assignment : assignments) {
             assignmentsByName.put(assignment.name(), assignment.value());
         }
         return assignmentsByName;

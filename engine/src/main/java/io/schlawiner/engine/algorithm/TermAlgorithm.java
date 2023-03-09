@@ -140,19 +140,18 @@ public class TermAlgorithm extends AbstractAlgorithm implements Serializable {
     @SuppressWarnings("Duplicates")
     @Override
     protected void computePermutation(final int a, final int b, final int c, final int target, final Solutions solutions) {
-        final Assignment[] assignments = new Assignment[] { new Assignment("a", a), new Assignment("b", b),
-                new Assignment("c", c) };
-        for (final Term term : SAME_NUMBERS) {
+        Assignment[] assignments = new Assignment[] { new Assignment("a", a), new Assignment("b", b), new Assignment("c", c) };
+        for (Term term : SAME_NUMBERS) {
             try {
                 solutions.add(new Solution(term.print(assignments), term.eval(assignments)));
-            } catch (final TermException ignore) {
+            } catch (TermException ignore) {
             }
         }
         if (!sameDiceNumbers(a, b, c)) {
-            for (final Term term : DIFF_NUMBERS) {
+            for (Term term : DIFF_NUMBERS) {
                 try {
                     solutions.add(new Solution(term.print(assignments), term.eval(assignments)));
-                } catch (final TermException ignore) {
+                } catch (TermException ignore) {
                 }
             }
         }

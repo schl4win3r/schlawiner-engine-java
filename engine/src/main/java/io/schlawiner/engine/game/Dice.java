@@ -27,8 +27,8 @@ public record Dice(int[] numbers) {
      * New dice with three random numbers
      */
     public static Dice random() {
-        final Random random = new Random();
-        final int[] numbers = new int[] { 1 + random.nextInt(6), 1 + random.nextInt(6), 1 + random.nextInt(6) };
+        Random random = new Random();
+        int[] numbers = new int[] { 1 + random.nextInt(6), 1 + random.nextInt(6), 1 + random.nextInt(6) };
         return new Dice(numbers);
     }
 

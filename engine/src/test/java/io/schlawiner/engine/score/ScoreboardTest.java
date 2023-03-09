@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ScoreboardTest {
+
     private Player foo;
     private Player bar;
     private Players players;

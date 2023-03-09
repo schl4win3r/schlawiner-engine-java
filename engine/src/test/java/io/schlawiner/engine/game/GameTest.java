@@ -36,7 +36,7 @@ class GameTest {
 
     @BeforeEach
     void setUp() {
-        final Settings settings = Settings.defaults().withLevel(Level.HARD);
+        Settings settings = Settings.defaults().withLevel(Level.HARD);
         foo = Player.human("foo", settings.retries());
         computer = Player.computer("computer");
         game = new Game("test-game", new Players(asList(foo, computer)), new Numbers(new int[] { 16, 23, 42 }),
@@ -80,12 +80,12 @@ class GameTest {
         game.score(solution);
 
         // game over
-        final Scoreboard scoreboard = game.getScoreboard();
-        final int fooScore = scoreboard.getSummedScore(foo);
-        final int computerScore = scoreboard.getSummedScore(computer);
+        Scoreboard scoreboard = game.getScoreboard();
+        int fooScore = scoreboard.getSummedScore(foo);
+        int computerScore = scoreboard.getSummedScore(computer);
 
         assertEquals(fooScore, computerScore);
-        final List<Player> winners = scoreboard.getWinners();
+        List<Player> winners = scoreboard.getWinners();
         assertEquals(2, winners.size());
         assertTrue(winners.contains(foo));
         assertTrue(winners.contains(computer));

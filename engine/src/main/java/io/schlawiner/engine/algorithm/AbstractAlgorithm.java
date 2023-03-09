@@ -41,11 +41,11 @@ abstract class AbstractAlgorithm implements Algorithm {
 
     @Override
     public Solutions compute(final int a, final int b, final int c, final int target) {
-        final Solutions solutions = new Solutions(target, allowedDifference);
-        for (final int[] multiplier : MULTIPLIERS) {
-            final int am = a * multiplier[0];
-            final int bm = b * multiplier[1];
-            final int cm = c * multiplier[2];
+        Solutions solutions = new Solutions(target, allowedDifference);
+        for (int[] multiplier : MULTIPLIERS) {
+            int am = a * multiplier[0];
+            int bm = b * multiplier[1];
+            int cm = c * multiplier[2];
             computePermutation(am, bm, cm, target, solutions);
         }
         return solutions;

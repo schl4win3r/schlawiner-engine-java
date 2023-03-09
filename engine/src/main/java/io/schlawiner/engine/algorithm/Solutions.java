@@ -38,7 +38,7 @@ public class Solutions {
 
     public void add(final Solution solution) {
         if (solution.value() >= target - allowedDifference && solution.value() <= target + allowedDifference) {
-            final int key = abs(solution.value() - target);
+            int key = abs(solution.value() - target);
             solutions.computeIfAbsent(key, k -> new TreeSet<>()).add(solution);
         }
     }

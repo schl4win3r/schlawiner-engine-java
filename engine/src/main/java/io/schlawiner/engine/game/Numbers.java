@@ -23,9 +23,9 @@ import static io.schlawiner.engine.util.Iterators.forArray;
 public class Numbers implements Iterable<Integer> {
 
     private final int count;
+    private final Integer[] numbers;
     private int index;
     private int current;
-    private final Integer[] numbers;
 
     /** Generates {@code count} random numbers */
     public Numbers(final int count) {
@@ -33,7 +33,7 @@ public class Numbers implements Iterable<Integer> {
         this.index = -1;
         this.current = -1;
         this.numbers = new Integer[count];
-        final Random random = new Random();
+        Random random = new Random();
         for (int i = 0; i < numbers.length; i++) {
             numbers[i] = 1 + random.nextInt(100);
         }

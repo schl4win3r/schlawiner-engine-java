@@ -30,7 +30,7 @@ public class Players implements Iterable<Player> {
 
     public Players(final Iterable<Player> players) {
         this.players = new ArrayList<>();
-        for (final Player player : players) {
+        for (Player player : players) {
             this.players.add(player);
         }
         this.iterator = cycle(players);

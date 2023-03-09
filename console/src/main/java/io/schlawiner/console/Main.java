@@ -41,8 +41,8 @@ import static java.util.stream.Collectors.joining;
 public class Main {
 
     public static void main(final String[] args) {
-        final TextIO textIO = TextIoFactory.getTextIO();
-        final TextTerminal<?> terminal = textIO.getTextTerminal();
+        TextIO textIO = TextIoFactory.getTextIO();
+        TextTerminal<?> terminal = textIO.getTextTerminal();
         new Main(textIO, terminal).start();
     }
 
@@ -63,7 +63,7 @@ public class Main {
     private void start() {
         while (true) {
             terminal.print(Texts.MAIN);
-            final int option = textIO.newIntInputReader().withMinVal(0).withMaxVal(3).read("Please choose");
+            int option = textIO.newIntInputReader().withMinVal(0).withMaxVal(3).read("Please choose");
 
             switch (option) {
                 case 1 -> settings();
@@ -78,7 +78,7 @@ public class Main {
         // noinspection InfiniteLoopStatement
         while (true) {
             terminal.printf(Texts.SETTINGS, settings.numbers(), settings.retries(), settings.penalty(), settings.level());
-            final int option = textIO.newIntInputReader().withMinVal(0).withMaxVal(4).read("Please choose");
+            int option = textIO.newIntInputReader().withMinVal(0).withMaxVal(4).read("Please choose");
             switch (option) {
                 case 1 -> settings = settings.withNumbers(textIO.newIntInputReader().withMinVal(2).withMaxVal(20)
                         .withDefaultValue(8).read("Number of numbers (2..20)"));
@@ -97,12 +97,12 @@ public class Main {
         // noinspection InfiniteLoopStatement
         while (true) {
             terminal.print(Texts.PLAYERS);
-            final int option = textIO.newIntInputReader().withMinVal(0).withMaxVal(3).read("Please choose");
+            int option = textIO.newIntInputReader().withMinVal(0).withMaxVal(3).read("Please choose");
 
             switch (option) {
                 case 1 -> {
-                    final String name = textIO.newStringInputReader().read("Name");
-                    final boolean human = textIO.newBooleanInputReader().withDefaultValue(true).read("Human");
+                    String name = textIO.newStringInputReader().read("Name");
+                    boolean human = textIO.newBooleanInputReader().withDefaultValue(true).read("Human");
                     players.add(new Player(name, human, settings.retries()));
                 }
                 case 2 -> {
@@ -110,14 +110,14 @@ public class Main {
                     if (players.isEmpty()) {
                         terminal.println("No players");
                     }
-                    for (final Player player : players) {
+                    for (Player player : players) {
                         terminal.printf("%s%n", player);
                     }
                 }
                 case 3 -> {
                     int index = 1;
                     terminal.println();
-                    for (final Player player : players) {
+                    for (Player player : players) {
                         terminal.printf("[%d] %s%n", index, player);
                         index++;
                     }
@@ -134,25 +134,25 @@ public class Main {
     }
 
     private void play() {
-        final Game game = new Game("console-game", new Players(players), new Numbers(settings.numbers()),
-                new OperationAlgorithm(), settings);
+        Game game = new Game("console-game", new Players(players), new Numbers(settings.numbers()), new OperationAlgorithm(),
+                settings);
 
         terminal.print(Texts.PLAY);
         while (game.hasNext()) {
             game.next();
             game.dice(Dice.random());
 
-            final Players players = game.getPlayers();
-            final Player currentPlayer = players.current();
-            final int currentNumber = game.getNumbers().current();
+            Players players = game.getPlayers();
+            Player currentPlayer = players.current();
+            int currentNumber = game.getNumbers().current();
             if (players.isFirst()) {
                 printScoreboard(game);
             }
             if (currentPlayer.human()) {
-                String expression = null;
+                String expression;
                 boolean validTerm = false;
                 while (!validTerm && !game.isCanceled()) {
-                    final String prompt = String.format("%s try to reach %d using %s", currentPlayer.name(), currentNumber,
+                    String prompt = String.format("%s try to reach %d using %s", currentPlayer.name(), currentNumber,
                             game.getDice());
                     try {
                         expression = textIO.newStringInputReader().read(prompt);
@@ -168,7 +168,7 @@ public class Main {
                         } else if ("cancel".equalsIgnoreCase(expression)) {
                             game.cancel();
                         } else {
-                            final Calculation calculation = game.calculate(expression);
+                            Calculation calculation = game.calculate(expression);
                             if (calculation.best()) {
                                 terminal.printf("Well done, your solution is the best.%n");
                             } else {
@@ -178,12 +178,12 @@ public class Main {
                             game.score(calculation.term(), calculation.difference());
                             validTerm = true;
                         }
-                    } catch (final TermException | DiceException e) {
+                    } catch (TermException | DiceException e) {
                         terminal.printf("%s%n", e.getMessage());
                     }
                 }
             } else {
-                final Solution solution = game.solve();
+                Solution solution = game.solve();
                 game.score(solution);
                 terminal.printf("%s diced %s. Solution: %s%n", currentPlayer.name(), game.getDice(), solution);
             }
@@ -192,7 +192,7 @@ public class Main {
         if (!game.isCanceled()) {
             printScoreboard(game);
             terminal.printf("Game over. ");
-            final List<Player> winners = game.getScoreboard().getWinners();
+            List<Player> winners = game.getScoreboard().getWinners();
             if (winners.size() == 1) {
                 terminal.printf("The winner is %s!%n", winners.get(0).name());
             } else {
@@ -206,23 +206,23 @@ public class Main {
         // header
         terminal.println();
         terminal.printf("    ");
-        for (final Player player : game.getPlayers()) {
+        for (Player player : game.getPlayers()) {
             terminal.printf("| %-20s ", player.name());
         }
         terminal.println();
         terminal.printf("====");
-        for (final Player ignored : game.getPlayers()) {
+        for (Player ignored : game.getPlayers()) {
             terminal.printf("+=================+====");
         }
         terminal.println();
 
         // body
         int numberIndex = 0;
-        for (final int number : game.getNumbers()) {
+        for (int number : game.getNumbers()) {
             terminal.printf("%3d ", number);
-            for (final Player player : game.getPlayers()) {
-                final Score score = game.getScoreboard().getScore(player, numberIndex);
-                final String difference = score.difference() == -1 ? "  " : String.format("%2d", score.difference());
+            for (Player player : game.getPlayers()) {
+                Score score = game.getScoreboard().getScore(player, numberIndex);
+                String difference = score.difference() == -1 ? "  " : String.format("%2d", score.difference());
                 terminal.printf("| %15s | %s ", (score.term() == null ? "" : score.term()), difference);
             }
             terminal.println();
@@ -231,12 +231,12 @@ public class Main {
 
         // footer
         terminal.printf("====");
-        for (final Player ignored : game.getPlayers()) {
+        for (Player ignored : game.getPlayers()) {
             terminal.printf("+=================+====");
         }
         terminal.println();
         terminal.printf("    ");
-        for (final Player player : game.getPlayers()) {
+        for (Player player : game.getPlayers()) {
             terminal.printf("|                 | %2d ", game.getScoreboard().getSummedScore(player));
         }
         terminal.println();

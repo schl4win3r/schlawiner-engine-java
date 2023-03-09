@@ -28,22 +28,22 @@ class AlgorithmComparisonTest {
 
     @Test
     void compute() {
-        final int[] operationResults = computeAlgorithm(new OperationAlgorithm());
-        final int[] termResults = computeAlgorithm(new TermAlgorithm());
+        int[] operationResults = computeAlgorithm(new OperationAlgorithm());
+        int[] termResults = computeAlgorithm(new TermAlgorithm());
         assertArrayEquals(operationResults, termResults);
     }
 
     private int[] computeAlgorithm(final Algorithm algorithm) {
-        final int[] numberOfResults = new int[diceNumbers.length];
-        final Solutions[] results = new Solutions[diceNumbers.length];
+        int[] numberOfResults = new int[diceNumbers.length];
+        Solutions[] results = new Solutions[diceNumbers.length];
 
         for (int i = 0; i < diceNumbers.length; i++) {
-            final Instant start = Instant.now();
+            Instant start = Instant.now();
             for (int target = 1; target < 101; target++) {
                 results[i] = algorithm.compute(diceNumbers[i][0], diceNumbers[i][1], diceNumbers[i][2], target);
             }
-            final Instant finish = Instant.now();
-            final long timeElapsed = Duration.between(start, finish).toMillis();
+            Instant finish = Instant.now();
+            long timeElapsed = Duration.between(start, finish).toMillis();
             System.out.format("%s finished with %d results in %d ms for targets 1..100 using [%d,%d,%d]%n", algorithm.getName(),
                     results[i].size(), timeElapsed, diceNumbers[i][0], diceNumbers[i][1], diceNumbers[i][2]);
             numberOfResults[i] = results[i].size();

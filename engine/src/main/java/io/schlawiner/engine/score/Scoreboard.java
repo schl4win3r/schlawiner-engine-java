@@ -40,28 +40,28 @@ public class Scoreboard {
         this.playerSums = new HashMap<>();
 
         int numberIndex = 0;
-        for (final Integer number : numbers) {
+        for (Integer number : numbers) {
             numberScores[numberIndex] = new NumberScore(numberIndex, number, players);
             numberIndex++;
         }
         int playerIndex = 0;
-        for (final Player player : players) {
+        for (Player player : players) {
             playerScores[playerIndex++] = new PlayerScore(player, numbers);
             playerSums.put(player, 0);
         }
     }
 
     public void setScore(final int numberIndex, final Player player, final String term, final int difference) {
-        final Score score = new Score(term, difference);
+        Score score = new Score(term, difference);
         if (numberIndex > -1 && numberIndex < numberScores.length) {
             numberScores[numberIndex].setScore(player, score);
         }
-        final int playerIndex = players.indexOf(player);
+        int playerIndex = players.indexOf(player);
         if (playerIndex > -1 && playerIndex < players.size()) {
             playerScores[playerIndex].setScore(numberIndex, score);
         }
         if (playerSums.containsKey(player)) {
-            final int newScore = playerSums.get(player) + score.difference();
+            int newScore = playerSums.get(player) + score.difference();
             playerSums.put(player, newScore);
         }
     }
@@ -75,7 +75,7 @@ public class Scoreboard {
     }
 
     public List<PlayerScore> getPlayerScores() {
-        final ArrayList<PlayerScore> list = new ArrayList<>();
+        ArrayList<PlayerScore> list = new ArrayList<>();
         Collections.addAll(list, playerScores);
         return list;
     }
@@ -89,12 +89,12 @@ public class Scoreboard {
 
     public List<Player> getWinners() {
         int min = Integer.MAX_VALUE;
-        for (final Integer sum : playerSums.values()) {
+        for (Integer sum : playerSums.values()) {
             min = Math.min(min, sum);
 
         }
-        final List<Player> winners = new ArrayList<>();
-        for (final Map.Entry<Player, Integer> entry : playerSums.entrySet()) {
+        List<Player> winners = new ArrayList<>();
+        for (Map.Entry<Player, Integer> entry : playerSums.entrySet()) {
             if (entry.getValue() == min) {
                 winners.add(entry.getKey());
             }

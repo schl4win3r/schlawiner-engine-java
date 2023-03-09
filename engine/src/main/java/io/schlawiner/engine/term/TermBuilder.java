@@ -31,7 +31,7 @@ class TermBuilder {
     }
 
     TermBuilder op(final Operator op) {
-        final Term e = new Term(op);
+        Term e = new Term(op);
         if (!terms.isEmpty()) {
             add(terms.peek(), e);
         }
@@ -48,7 +48,7 @@ class TermBuilder {
         return assign(new Value(value));
     }
 
-    private TermBuilder assign(Node node) {
+    private TermBuilder assign(final Node node) {
         if (terms.isEmpty()) {
             throw new TermException(String.format("Invalid term: '%s'", expression));
         }

@@ -38,15 +38,15 @@ final class InfixToRPN {
             return new String[0];
         }
 
-        final String[] tokens = split(expression);
+        String[] tokens = split(expression);
         return convert(tokens);
     }
 
     private static String[] split(final String expression) {
         StringBuilder number = new StringBuilder();
-        final List<String> tokens = new ArrayList<>();
+        List<String> tokens = new ArrayList<>();
         for (int i = 0; i < expression.length(); i++) {
-            final char c = expression.charAt(i);
+            char c = expression.charAt(i);
             if (OPS.contains(c) || Character.isWhitespace(c)) {
                 if (number.length() > 0) {
                     tokens.add(number.toString());
@@ -66,9 +66,9 @@ final class InfixToRPN {
     }
 
     private static String[] convert(final String[] tokens) {
-        final ArrayList<String> out = new ArrayList<>();
-        final Stack<String> stack = new Stack<>();
-        for (final String token : tokens) {
+        ArrayList<String> out = new ArrayList<>();
+        Stack<String> stack = new Stack<>();
+        for (String token : tokens) {
             if (Operator.isOperator(token)) {
                 while (!stack.empty() && Operator.isOperator(stack.peek())) {
                     if (precedenceDifference(token, stack.peek()) <= 0) {

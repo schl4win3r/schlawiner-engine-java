@@ -22,20 +22,20 @@ final class TermParser {
             throw new TermException("Empty term");
         }
 
-        final String[] rpn = InfixToRPN.infixToRPN(expression);
+        String[] rpn = InfixToRPN.infixToRPN(expression);
         if (rpn.length == 0) {
             throw new TermException(String.format("Invalid term: '%s'", expression));
         }
 
-        final TermBuilder termBuilder = new TermBuilder(expression);
+        TermBuilder termBuilder = new TermBuilder(expression);
         for (int i = rpn.length - 1; i >= 0; i--) {
-            final String token = rpn[i];
+            String token = rpn[i];
             if (Operator.isOperator(token)) {
                 termBuilder.op(Operator.toOperator(token));
             } else {
                 try {
                     termBuilder.val(Integer.parseInt(token));
-                } catch (final NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     termBuilder.var(token);
                 }
             }

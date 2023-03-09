@@ -28,14 +28,14 @@ public final class DiceValidator {
     private static final Pattern NUMBERS = Pattern.compile("\\d+");
 
     static void validate(final Dice dice, final Term term) throws DiceException {
-        final int[] values = term.getValues();
+        int[] values = term.getValues();
         if (values.length < dice.numbers().length) {
             throw new DiceException("The term contains not all dice numbers.");
         } else if (values.length > dice.numbers().length) {
             throw new DiceException("The term contains more numbers than diced.");
         } else {
-            final boolean[] used = internalUsed(dice, values);
-            for (final boolean b : used) {
+            boolean[] used = internalUsed(dice, values);
+            for (boolean b : used) {
                 if (!b) {
                     throw new DiceException("You have not used all the dice numbers.");
                 }
@@ -47,17 +47,17 @@ public final class DiceValidator {
      * Count used number of a probably invalid expression (not yet parsed term).
      */
     static boolean[] used(final Dice dice, final String expression) {
-        final int[] termNumbers = extractTermNumbers(expression);
+        int[] termNumbers = extractTermNumbers(expression);
         return internalUsed(dice, termNumbers);
     }
 
     private static boolean[] internalUsed(final Dice dice, final int[] termNumbers) {
-        final boolean[] used = new boolean[dice.numbers().length];
+        boolean[] used = new boolean[dice.numbers().length];
 
-        number: for (final int termNumber : termNumbers) {
+        number: for (int termNumber : termNumbers) {
             for (int j = 0; j < dice.numbers().length; j++) {
                 if (!used[j]) {
-                    for (final int multiplier : MULTIPLIERS) {
+                    for (int multiplier : MULTIPLIERS) {
                         used[j] = termNumber == dice.numbers()[j] * multiplier;
                         if (used[j]) {
                             continue number;
@@ -74,19 +74,19 @@ public final class DiceValidator {
             return new int[0];
         }
 
-        final Matcher matcher = NUMBERS.matcher(expression);
-        final List<Integer> numbers = new ArrayList<>();
+        Matcher matcher = NUMBERS.matcher(expression);
+        List<Integer> numbers = new ArrayList<>();
         while (matcher.find()) {
-            final String number = matcher.group();
+            String number = matcher.group();
             try {
                 numbers.add(Integer.valueOf(number));
-            } catch (final NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 throw new DiceException(String.format("Invalid number %s", number));
             }
         }
         int index = 0;
-        final int[] result = new int[numbers.size()];
-        for (final Integer number : numbers) {
+        int[] result = new int[numbers.size()];
+        for (Integer number : numbers) {
             result[index] = number;
             index++;
         }
