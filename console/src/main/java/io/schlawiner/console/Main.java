@@ -206,12 +206,12 @@ public class Main {
         terminal.println();
         terminal.printf("    ");
         for (Player player : game.players()) {
-            terminal.printf("| %-20s ", player.name());
+            terminal.printf("│ %-20s ", player.name());
         }
         terminal.println();
-        terminal.printf("====");
+        terminal.printf("━━━━");
         for (Player ignored : game.players()) {
-            terminal.printf("+=================+====");
+            terminal.printf("┿━━━━━━━━━━━━━━━━━┯━━━━");
         }
         terminal.println();
 
@@ -222,21 +222,21 @@ public class Main {
             for (Player player : game.players()) {
                 Score score = game.scoreboard().score(player, numberIndex);
                 String difference = score.difference() == -1 ? "  " : "%2d".formatted(score.difference());
-                terminal.printf("| %15s | %s ", score.term(), difference);
+                terminal.printf("│ %15s │ %s ", score.term(), difference);
             }
             terminal.println();
             numberIndex++;
         }
 
         // footer
-        terminal.printf("====");
+        terminal.printf("━━━━");
         for (Player ignored : game.players()) {
-            terminal.printf("+=================+====");
+            terminal.printf("┿━━━━━━━━━━━━━━━━━┿━━━━");
         }
         terminal.println();
         terminal.printf("    ");
         for (Player player : game.players()) {
-            terminal.printf("|                 | %2d ", game.scoreboard().summedScore(player));
+            terminal.printf("│                 │ %2d ", game.scoreboard().summedScore(player));
         }
         terminal.println();
         terminal.println();
