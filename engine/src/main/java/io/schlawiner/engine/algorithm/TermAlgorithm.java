@@ -150,13 +150,15 @@ public class TermAlgorithm extends AbstractAlgorithm implements TermPermutations
         for (Term term : SAME_NUMBERS) {
             try {
                 solutions.add(new Solution(term.print(assignments), term.eval(assignments)));
-            } catch (TermException ignore) {}
+            } catch (TermException ignore) {
+            }
         }
         if (differentDiceNumbers(a, b, c)) {
             for (Term term : DIFF_NUMBERS) {
                 try {
                     solutions.add(new Solution(term.print(assignments), term.eval(assignments)));
-                } catch (TermException ignore) {}
+                } catch (TermException ignore) {
+                }
             }
         }
     }

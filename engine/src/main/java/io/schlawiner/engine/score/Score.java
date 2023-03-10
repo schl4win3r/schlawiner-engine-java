@@ -18,7 +18,7 @@ package io.schlawiner.engine.score;
 // use String instead of Term here, since the 'term' could also be "skipped" or "timeout"
 public record Score(String term, int difference) {
 
-    static final Score EMPTY = new Score("n/a", -1);
+    static final Score EMPTY = new Score("", -1);
 
     @Override
     public String toString() {

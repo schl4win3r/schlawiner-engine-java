@@ -152,8 +152,7 @@ public class Main {
                 String expression;
                 boolean validTerm = false;
                 while (!validTerm && !game.canceled()) {
-                    String prompt = "%s try to reach %d using %s".formatted(currentPlayer.name(), currentNumber,
-                            game.dice());
+                    String prompt = "%s try to reach %d using %s".formatted(currentPlayer.name(), currentNumber, game.dice());
                     try {
                         expression = textIO.newStringInputReader().read(prompt);
                         if ("retry".equalsIgnoreCase(expression)) {
@@ -223,7 +222,7 @@ public class Main {
             for (Player player : game.players()) {
                 Score score = game.scoreboard().score(player, numberIndex);
                 String difference = score.difference() == -1 ? "  " : "%2d".formatted(score.difference());
-                terminal.printf("| %15s | %s ", (score.term() == null ? "" : score.term()), difference);
+                terminal.printf("| %15s | %s ", score.term(), difference);
             }
             terminal.println();
             numberIndex++;
