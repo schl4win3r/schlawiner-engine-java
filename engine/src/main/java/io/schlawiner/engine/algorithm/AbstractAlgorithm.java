@@ -20,11 +20,21 @@ abstract class AbstractAlgorithm implements Algorithm {
     // Calculated by io.schlawiner.engine.algorithm.FindDifference
     private static final int DEFAULT_DIFFERENCE = 15;
 
-    private static final int[][] MULTIPLIERS = new int[][] { { 1, 1, 1 }, { 1, 1, 10 }, { 1, 10, 1 }, { 10, 1, 1 },
-            { 1, 1, 100 }, { 1, 100, 1 }, { 100, 1, 1 }, { 1, 10, 10 }, { 10, 1, 10 }, { 10, 10, 1 }, { 10, 10, 10 },
-            { 10, 10, 100 }, { 10, 100, 10 }, { 100, 10, 10 }, { 1, 100, 100 }, { 100, 1, 100 }, { 100, 100, 1 },
-            { 10, 100, 100 }, { 100, 10, 100 }, { 100, 100, 10 }, { 100, 100, 100 }, { 1, 10, 100 }, { 1, 100, 10 },
-            { 10, 1, 100 }, { 10, 100, 1 }, { 100, 1, 10 }, { 100, 10, 1 }, };
+    // @formatter:off
+    private static final int[][] MULTIPLIERS = new int[][] {
+            { 1, 1, 1 },
+            { 1, 1, 10 }, { 1, 10, 1 }, { 10, 1, 1 },
+            { 1, 1, 100 }, { 1, 100, 1 }, { 100, 1, 1 },
+            { 1, 10, 10 }, { 10, 1, 10 }, { 10, 10, 1 },
+            { 10, 10, 10 },
+            { 10, 10, 100 }, { 10, 100, 10 }, { 100, 10, 10 },
+            { 1, 100, 100 }, { 100, 1, 100 }, { 100, 100, 1 },
+            { 10, 100, 100 }, { 100, 10, 100 }, { 100, 100, 10 },
+            { 100, 100, 100 },
+            { 1, 10, 100 }, { 1, 100, 10 }, { 10, 1, 100 },
+            { 10, 100, 1 }, { 100, 1, 10 }, { 100, 10, 1 },
+    };
+    // @formatter:on
 
     private final String name;
     private final int allowedDifference;
@@ -53,12 +63,12 @@ abstract class AbstractAlgorithm implements Algorithm {
 
     protected abstract void computePermutation(int a, int b, int c, int target, Solutions solutions);
 
-    boolean sameDiceNumbers(final int a, final int b, final int c) {
-        return a == b && a == c;
+    boolean differentDiceNumbers(final int a, final int b, final int c) {
+        return a != b || a != c;
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return name;
     }
 }

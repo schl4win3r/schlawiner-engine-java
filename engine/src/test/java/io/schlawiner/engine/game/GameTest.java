@@ -80,12 +80,12 @@ class GameTest {
         game.score(solution);
 
         // game over
-        Scoreboard scoreboard = game.getScoreboard();
-        int fooScore = scoreboard.getSummedScore(foo);
-        int computerScore = scoreboard.getSummedScore(computer);
+        Scoreboard scoreboard = game.scoreboard();
+        int fooScore = scoreboard.summedScore(foo);
+        int computerScore = scoreboard.summedScore(computer);
 
         assertEquals(fooScore, computerScore);
-        List<Player> winners = scoreboard.getWinners();
+        List<Player> winners = scoreboard.winners();
         assertEquals(2, winners.size());
         assertTrue(winners.contains(foo));
         assertTrue(winners.contains(computer));

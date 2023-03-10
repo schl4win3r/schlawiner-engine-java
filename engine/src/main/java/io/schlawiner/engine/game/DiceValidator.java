@@ -44,7 +44,7 @@ public final class DiceValidator {
     }
 
     /**
-     * Count used number of a probably invalid expression (not yet parsed term).
+     * Count used numbers of a probably invalid expression (not yet parsed term).
      */
     static boolean[] used(final Dice dice, final String expression) {
         int[] termNumbers = extractTermNumbers(expression);
@@ -81,7 +81,7 @@ public final class DiceValidator {
             try {
                 numbers.add(Integer.valueOf(number));
             } catch (NumberFormatException e) {
-                throw new DiceException(String.format("Invalid number %s", number));
+                throw new DiceException("Invalid number %s".formatted(number));
             }
         }
         int index = 0;

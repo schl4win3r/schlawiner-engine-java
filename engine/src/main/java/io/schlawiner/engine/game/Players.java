@@ -43,11 +43,11 @@ public class Players implements Iterable<Player> {
         return current;
     }
 
-    public boolean isFirst() {
+    public boolean first() {
         return current != null && players.indexOf(current) == 0;
     }
 
-    public boolean isLast() {
+    public boolean last() {
         return current != null && players.indexOf(current) == players.size() - 1;
     }
 
@@ -68,7 +68,7 @@ public class Players implements Iterable<Player> {
         return players.size();
     }
 
-    public boolean isEmpty() {
+    public boolean empty() {
         return players.isEmpty();
     }
 }

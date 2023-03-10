@@ -36,7 +36,7 @@ class RoomTest {
 
     @Test
     void empty() {
-        assertTrue(room.isEmpty());
+        assertTrue(room.empty());
     }
 
     @Test

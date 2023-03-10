@@ -15,16 +15,14 @@
  */
 package io.schlawiner.engine.term;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toMap;
 
 public record Assignment(String name, int value) {
 
     static Map<String, Integer> byName(final Assignment... assignments) {
-        Map<String, Integer> assignmentsByName = new HashMap<>();
-        for (Assignment assignment : assignments) {
-            assignmentsByName.put(assignment.name(), assignment.value());
-        }
-        return assignmentsByName;
+        return stream(assignments).collect(toMap(Assignment::name, Assignment::value));
     }
 }

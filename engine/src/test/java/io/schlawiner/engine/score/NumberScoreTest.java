@@ -46,20 +46,20 @@ class NumberScoreTest {
 
     @Test
     void newInstance() {
-        assertEquals(42, numberScore.getNumber());
-        assertEquals(EMPTY, numberScore.getScore(foo));
-        assertEquals(EMPTY, numberScore.getScore(bar));
+        assertEquals(42, numberScore.number());
+        assertEquals(EMPTY, numberScore.score(foo));
+        assertEquals(EMPTY, numberScore.score(bar));
         assertFalse(numberScore.hasScore(foo));
         assertFalse(numberScore.hasScore(bar));
     }
 
     @Test
     void scores() {
-        numberScore.setScore(foo, one);
-        numberScore.setScore(bar, two);
+        numberScore.score(foo, one);
+        numberScore.score(bar, two);
 
-        assertEquals(1, numberScore.getScore(foo).difference());
-        assertEquals(2, numberScore.getScore(bar).difference());
+        assertEquals(1, numberScore.score(foo).difference());
+        assertEquals(2, numberScore.score(bar).difference());
         assertTrue(numberScore.hasScore(foo));
         assertTrue(numberScore.hasScore(bar));
     }

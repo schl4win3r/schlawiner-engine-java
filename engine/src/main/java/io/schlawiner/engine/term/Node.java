@@ -18,15 +18,15 @@ package io.schlawiner.engine.term;
 /** Node of a binary tree */
 public sealed interface Node permits Term, Variable, Value {
 
-    Node getParent();
+    Node parent();
 
-    void setParent(Node parent);
+    void parent(Node parent);
 
-    Node getLeft();
+    Node left();
 
-    void setLeft(Node left);
+    void left(Node left);
 
-    Node getRight();
+    Node right();
 
-    void setRight(Node right);
+    void right(Node right);
 }

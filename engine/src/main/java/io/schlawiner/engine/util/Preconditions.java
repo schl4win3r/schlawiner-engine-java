@@ -38,11 +38,11 @@ final class Preconditions {
 
     private static String badPositionIndex(final int index, final int size, final String desc) {
         if (index < 0) {
-            return String.format("%s (%s) must not be negative", desc, index);
+            return "%s (%s) must not be negative".formatted(desc, index);
         } else if (size < 0) {
             throw new IllegalArgumentException("negative size: " + size);
         } else { // index > size
-            return String.format("%s (%s) must not be greater than size (%s)", desc, index, size);
+            return "%s (%s) must not be greater than size (%s)".formatted(desc, index, size);
         }
     }
 
@@ -54,7 +54,7 @@ final class Preconditions {
             return badPositionIndex(end, size, "end index");
         }
         // end < start
-        return String.format("end index (%s) must not be less than start index (%s)", end, start);
+        return "end index (%s) must not be less than start index (%s)".formatted(end, start);
     }
 
     private Preconditions() {

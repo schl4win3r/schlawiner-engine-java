@@ -15,7 +15,6 @@
  */
 package io.schlawiner.engine.algorithm;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,114 +22,115 @@ import io.schlawiner.engine.term.Assignment;
 import io.schlawiner.engine.term.Term;
 import io.schlawiner.engine.term.TermException;
 
-public class TermAlgorithm extends AbstractAlgorithm implements Serializable {
+public class TermAlgorithm extends AbstractAlgorithm implements TermPermutations {
 
     private static final List<Term> SAME_NUMBERS = new ArrayList<>();
     private static final List<Term> DIFF_NUMBERS = new ArrayList<>();
+
     static {
         // a + b + c
-        SAME_NUMBERS.add(Term.valueOf("a + b + c"));
+        SAME_NUMBERS.add(ADD_ABC);
 
         // a - b - c
-        SAME_NUMBERS.add(Term.valueOf("a - b - c"));
-        DIFF_NUMBERS.add(Term.valueOf("b - a - c"));
-        DIFF_NUMBERS.add(Term.valueOf("c - a - b"));
+        SAME_NUMBERS.add(SUBTRACT_ABC);
+        DIFF_NUMBERS.add(SUBTRACT_BAC);
+        DIFF_NUMBERS.add(SUBTRACT_CAB);
 
         // a * b * c
-        SAME_NUMBERS.add(Term.valueOf("a * b * c"));
+        SAME_NUMBERS.add(MULTIPLY_ABC);
 
         // a / b / c
-        SAME_NUMBERS.add(Term.valueOf("a / b / c"));
-        DIFF_NUMBERS.add(Term.valueOf("b / a / c"));
-        DIFF_NUMBERS.add(Term.valueOf("c / a / b"));
+        SAME_NUMBERS.add(DIVIDE_ABC);
+        DIFF_NUMBERS.add(DIVIDE_BAC);
+        DIFF_NUMBERS.add(DIVIDE_CAB);
 
         // a + b - c
-        SAME_NUMBERS.add(Term.valueOf("a + b - c"));
-        DIFF_NUMBERS.add(Term.valueOf("a + c - b"));
-        DIFF_NUMBERS.add(Term.valueOf("b + c - a"));
+        SAME_NUMBERS.add(ADD_SUBTRACT_ABC);
+        DIFF_NUMBERS.add(ADD_SUBTRACT_ACB);
+        DIFF_NUMBERS.add(ADD_SUBTRACT_BCA);
 
         // a * b / c
-        SAME_NUMBERS.add(Term.valueOf("a * b / c"));
-        DIFF_NUMBERS.add(Term.valueOf("a * c / b"));
-        DIFF_NUMBERS.add(Term.valueOf("b * c / a"));
+        SAME_NUMBERS.add(MULTIPLY_DIVIDE_ABC);
+        DIFF_NUMBERS.add(MULTIPLY_DIVIDE_ACB);
+        DIFF_NUMBERS.add(MULTIPLY_DIVIDE_BCA);
 
         // a * b + c
-        SAME_NUMBERS.add(Term.valueOf("a * b + c"));
-        DIFF_NUMBERS.add(Term.valueOf("a * c + b"));
-        DIFF_NUMBERS.add(Term.valueOf("b * c + a"));
+        SAME_NUMBERS.add(MULTIPLY_ADD_ABC);
+        DIFF_NUMBERS.add(MULTIPLY_ADD_ACB);
+        DIFF_NUMBERS.add(MULTIPLY_ADD_BCA);
 
         // (a + b) * c
-        SAME_NUMBERS.add(Term.valueOf("(a + b) * c"));
-        DIFF_NUMBERS.add(Term.valueOf("(a + c) * b"));
-        DIFF_NUMBERS.add(Term.valueOf("(b + c) * a"));
+        SAME_NUMBERS.add(ADD_MULTIPLY_ABC);
+        DIFF_NUMBERS.add(ADD_MULTIPLY_ACB);
+        DIFF_NUMBERS.add(ADD_MULTIPLY_BCA);
 
         // a * b - c
-        SAME_NUMBERS.add(Term.valueOf("a * b - c"));
-        DIFF_NUMBERS.add(Term.valueOf("a * c - b"));
-        DIFF_NUMBERS.add(Term.valueOf("b * c - a"));
+        SAME_NUMBERS.add(MULTIPLY_SUBTRACT_1_ABC);
+        DIFF_NUMBERS.add(MULTIPLY_SUBTRACT_1_ACB);
+        DIFF_NUMBERS.add(MULTIPLY_SUBTRACT_1_BCA);
 
         // a - b * c
-        SAME_NUMBERS.add(Term.valueOf("a - b * c"));
-        DIFF_NUMBERS.add(Term.valueOf("b - a * c"));
-        DIFF_NUMBERS.add(Term.valueOf("c - a * b"));
+        SAME_NUMBERS.add(MULTIPLY_SUBTRACT_2_ABC);
+        DIFF_NUMBERS.add(MULTIPLY_SUBTRACT_2_BAC);
+        DIFF_NUMBERS.add(MULTIPLY_SUBTRACT_2_CAB);
 
         // (a - b) * c
-        SAME_NUMBERS.add(Term.valueOf("(a - b) * c"));
-        DIFF_NUMBERS.add(Term.valueOf("(b - a) * c"));
-        DIFF_NUMBERS.add(Term.valueOf("(a - c) * b"));
-        DIFF_NUMBERS.add(Term.valueOf("(c - a) * b"));
-        DIFF_NUMBERS.add(Term.valueOf("(b - c) * a"));
-        DIFF_NUMBERS.add(Term.valueOf("(c - b) * a"));
+        SAME_NUMBERS.add(SUBTRACT_MULTIPLY_ABC);
+        DIFF_NUMBERS.add(SUBTRACT_MULTIPLY_BAC);
+        DIFF_NUMBERS.add(SUBTRACT_MULTIPLY_ACB);
+        DIFF_NUMBERS.add(SUBTRACT_MULTIPLY_CAB);
+        DIFF_NUMBERS.add(SUBTRACT_MULTIPLY_BCA);
+        DIFF_NUMBERS.add(SUBTRACT_MULTIPLY_CBA);
 
         // a / b + c
-        SAME_NUMBERS.add(Term.valueOf("a / b + c"));
-        DIFF_NUMBERS.add(Term.valueOf("b / a + c"));
-        DIFF_NUMBERS.add(Term.valueOf("a / c + b"));
-        DIFF_NUMBERS.add(Term.valueOf("c / a + b"));
-        DIFF_NUMBERS.add(Term.valueOf("b / c + a"));
-        DIFF_NUMBERS.add(Term.valueOf("c / b + a"));
+        SAME_NUMBERS.add(DIVIDE_ADD_ABC);
+        DIFF_NUMBERS.add(DIVIDE_ADD_BAC);
+        DIFF_NUMBERS.add(DIVIDE_ADD_ACB);
+        DIFF_NUMBERS.add(DIVIDE_ADD_CAB);
+        DIFF_NUMBERS.add(DIVIDE_ADD_BCA);
+        DIFF_NUMBERS.add(DIVIDE_ADD_CBA);
 
         // (a + b) / c
-        SAME_NUMBERS.add(Term.valueOf("(a + b) / c"));
-        DIFF_NUMBERS.add(Term.valueOf("(a + c) / b"));
-        DIFF_NUMBERS.add(Term.valueOf("(b + c) / a"));
+        SAME_NUMBERS.add(ADD_DIVIDE_1_ABC);
+        DIFF_NUMBERS.add(ADD_DIVIDE_1_ACB);
+        DIFF_NUMBERS.add(ADD_DIVIDE_1_BCA);
 
         // a / (b + c)
-        SAME_NUMBERS.add(Term.valueOf("a / (b + c)"));
-        DIFF_NUMBERS.add(Term.valueOf("b / (a + c)"));
-        DIFF_NUMBERS.add(Term.valueOf("c / (a + b)"));
+        SAME_NUMBERS.add(ADD_DIVIDE_2_ABC);
+        DIFF_NUMBERS.add(ADD_DIVIDE_2_BAC);
+        DIFF_NUMBERS.add(ADD_DIVIDE_2_CAB);
 
         // a / b - c
-        SAME_NUMBERS.add(Term.valueOf("a / b - c"));
-        DIFF_NUMBERS.add(Term.valueOf("a / c - b"));
-        DIFF_NUMBERS.add(Term.valueOf("b / a - a"));
-        DIFF_NUMBERS.add(Term.valueOf("b / c - a"));
-        DIFF_NUMBERS.add(Term.valueOf("c / a - b"));
-        DIFF_NUMBERS.add(Term.valueOf("c / b - a"));
+        SAME_NUMBERS.add(DIVIDE_SUBTRACT_1_ABC);
+        DIFF_NUMBERS.add(DIVIDE_SUBTRACT_1_ACB);
+        DIFF_NUMBERS.add(DIVIDE_SUBTRACT_1_BAC);
+        DIFF_NUMBERS.add(DIVIDE_SUBTRACT_1_BCA);
+        DIFF_NUMBERS.add(DIVIDE_SUBTRACT_1_CAB);
+        DIFF_NUMBERS.add(DIVIDE_SUBTRACT_1_CBA);
 
         // a - b / c
-        SAME_NUMBERS.add(Term.valueOf("a - b / c"));
-        DIFF_NUMBERS.add(Term.valueOf("a - c / b"));
-        DIFF_NUMBERS.add(Term.valueOf("b - a / a"));
-        DIFF_NUMBERS.add(Term.valueOf("b - c / a"));
-        DIFF_NUMBERS.add(Term.valueOf("c - a / b"));
-        DIFF_NUMBERS.add(Term.valueOf("c - b / a"));
+        SAME_NUMBERS.add(DIVIDE_SUBTRACT_2_ABC);
+        DIFF_NUMBERS.add(DIVIDE_SUBTRACT_2_ACB);
+        DIFF_NUMBERS.add(DIVIDE_SUBTRACT_2_BAC);
+        DIFF_NUMBERS.add(DIVIDE_SUBTRACT_2_BCA);
+        DIFF_NUMBERS.add(DIVIDE_SUBTRACT_2_CAB);
+        DIFF_NUMBERS.add(DIVIDE_SUBTRACT_2_CBA);
 
         // (a - b) / c
-        SAME_NUMBERS.add(Term.valueOf("(a - b) / c"));
-        DIFF_NUMBERS.add(Term.valueOf("(a - c) / b"));
-        DIFF_NUMBERS.add(Term.valueOf("(b - a) / a"));
-        DIFF_NUMBERS.add(Term.valueOf("(b - c) / a"));
-        DIFF_NUMBERS.add(Term.valueOf("(c - a) / b"));
-        DIFF_NUMBERS.add(Term.valueOf("(c - b) / a"));
+        SAME_NUMBERS.add(SUBTRACT_DIVIDE_1_ABC);
+        DIFF_NUMBERS.add(SUBTRACT_DIVIDE_1_ACB);
+        DIFF_NUMBERS.add(SUBTRACT_DIVIDE_1_BAC);
+        DIFF_NUMBERS.add(SUBTRACT_DIVIDE_1_BCA);
+        DIFF_NUMBERS.add(SUBTRACT_DIVIDE_1_CAB);
+        DIFF_NUMBERS.add(SUBTRACT_DIVIDE_1_CBA);
 
         // a / (b - c)
-        SAME_NUMBERS.add(Term.valueOf("a / (b - c)"));
-        DIFF_NUMBERS.add(Term.valueOf("a / (c - b)"));
-        DIFF_NUMBERS.add(Term.valueOf("b / (a - a)"));
-        DIFF_NUMBERS.add(Term.valueOf("b / (c - a)"));
-        DIFF_NUMBERS.add(Term.valueOf("c / (a - b)"));
-        DIFF_NUMBERS.add(Term.valueOf("c / (b - a)"));
+        SAME_NUMBERS.add(SUBTRACT_DIVIDE_2_ABC);
+        DIFF_NUMBERS.add(SUBTRACT_DIVIDE_2_ACB);
+        DIFF_NUMBERS.add(SUBTRACT_DIVIDE_2_BAC);
+        DIFF_NUMBERS.add(SUBTRACT_DIVIDE_2_BCA);
+        DIFF_NUMBERS.add(SUBTRACT_DIVIDE_2_CAB);
+        DIFF_NUMBERS.add(SUBTRACT_DIVIDE_2_CBA);
     }
 
     TermAlgorithm() {
@@ -139,19 +139,24 @@ public class TermAlgorithm extends AbstractAlgorithm implements Serializable {
 
     @Override
     protected void computePermutation(final int a, final int b, final int c, final int target, final Solutions solutions) {
-        Assignment[] assignments = new Assignment[] { new Assignment("a", a), new Assignment("b", b), new Assignment("c", c) };
+        // @formatter:off
+        Assignment[] assignments = new Assignment[] {
+                new Assignment("a", a),
+                new Assignment("b", b),
+                new Assignment("c", c)
+        };
+        // @formatter:on
+
         for (Term term : SAME_NUMBERS) {
             try {
                 solutions.add(new Solution(term.print(assignments), term.eval(assignments)));
-            } catch (TermException ignore) {
-            }
+            } catch (TermException ignore) {}
         }
-        if (!sameDiceNumbers(a, b, c)) {
+        if (differentDiceNumbers(a, b, c)) {
             for (Term term : DIFF_NUMBERS) {
                 try {
                     solutions.add(new Solution(term.print(assignments), term.eval(assignments)));
-                } catch (TermException ignore) {
-                }
+                } catch (TermException ignore) {}
             }
         }
     }

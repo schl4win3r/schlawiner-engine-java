@@ -39,34 +39,34 @@ class PlayersTest {
 
     @Test
     void newInstance() {
-        assertFalse(players.isFirst());
-        assertFalse(players.isLast());
-        assertFalse(players.isEmpty());
+        assertFalse(players.first());
+        assertFalse(players.last());
+        assertFalse(players.empty());
         assertNull(players.current());
     }
 
     @Test
     void lifecycle() {
-        assertFalse(players.isFirst());
-        assertFalse(players.isLast());
+        assertFalse(players.first());
+        assertFalse(players.last());
         assertEquals(2, players.size());
         assertNull(players.current());
 
         assertEquals(foo, players.next());
-        assertTrue(players.isFirst());
-        assertFalse(players.isLast());
+        assertTrue(players.first());
+        assertFalse(players.last());
         assertEquals(2, players.size());
         assertEquals(foo, players.current());
 
         assertEquals(bar, players.next());
-        assertFalse(players.isFirst());
-        assertTrue(players.isLast());
+        assertFalse(players.first());
+        assertTrue(players.last());
         assertEquals(2, players.size());
         assertEquals(bar, players.current());
 
         assertEquals(foo, players.next());
-        assertTrue(players.isFirst());
-        assertFalse(players.isLast());
+        assertTrue(players.first());
+        assertFalse(players.last());
         assertEquals(2, players.size());
         assertEquals(foo, players.current());
     }

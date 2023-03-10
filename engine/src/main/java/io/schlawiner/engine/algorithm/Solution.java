@@ -15,21 +15,22 @@
  */
 package io.schlawiner.engine.algorithm;
 
-public record Solution(String term, int value) implements Comparable<Solution> {
+/** Solution calculated by an algorithm */
+public record Solution(String term, int result) implements Comparable<Solution> {
 
     static final Solution INVALID = new Solution("Invalid term", Integer.MAX_VALUE);
 
     @Override
     public int compareTo(final Solution other) {
-        int result = Integer.compare(value, other.value);
-        if (result == 0) {
-            result = term.compareTo(other.term);
+        int diff = Integer.compare(result, other.result);
+        if (diff == 0) {
+            diff = term.compareTo(other.term);
         }
-        return result;
+        return diff;
     }
 
     @Override
     public String toString() {
-        return term + " = " + value;
+        return term + " = " + result;
     }
 }

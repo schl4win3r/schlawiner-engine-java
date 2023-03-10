@@ -97,7 +97,7 @@ final class InfixToRPN {
 
     private static int precedenceDifference(final String token1, final String token2) {
         if (!Operator.isOperator(token1) || !Operator.isOperator(token2)) {
-            throw new TermException("Invalid tokens: " + token1 + ",. " + token2);
+            throw new TermException("Invalid tokens: %s, %s".formatted(token1, token2));
         }
         return Operator.toOperator(token1).precedence() - Operator.toOperator(token2).precedence();
     }

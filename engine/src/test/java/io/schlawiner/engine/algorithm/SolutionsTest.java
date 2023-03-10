@@ -37,7 +37,7 @@ class SolutionsTest {
         solutions.add(new Solution("term 8", 26));
 
         final Solution solution = solutions.bestSolution();
-        assertEquals(22, solution.value());
+        assertEquals(22, solution.result());
     }
 
     @Test

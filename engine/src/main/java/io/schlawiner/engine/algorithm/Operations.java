@@ -18,7 +18,7 @@ package io.schlawiner.engine.algorithm;
 final class Operations {
 
     static Solution add(final int a, final int b, final int c) {
-        return new Solution(a + " + " + b + " + " + c, a + b + c);
+        return new Solution("%d + %d + %d".formatted(a, b, c), a + b + c);
     }
 
     static Solution addDivide1(final int a, final int b, final int c) {

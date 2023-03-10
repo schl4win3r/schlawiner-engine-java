@@ -24,7 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 class AlgorithmComparisonTest {
 
+    // @formatter:off
     private final int[][] diceNumbers = new int[][] { { 2, 3, 5 }, { 4, 4, 4 } };
+    // @formatter:on
 
     @Test
     void compute() {
@@ -44,7 +46,7 @@ class AlgorithmComparisonTest {
             }
             Instant finish = Instant.now();
             long timeElapsed = Duration.between(start, finish).toMillis();
-            System.out.format("%s finished with %d results in %d ms for targets 1..100 using [%d,%d,%d]%n", algorithm.getName(),
+            System.out.format("%s finished with %d results in %d ms for targets 1..100 using [%d,%d,%d]%n", algorithm.name(),
                     results[i].size(), timeElapsed, diceNumbers[i][0], diceNumbers[i][1], diceNumbers[i][2]);
             numberOfResults[i] = results[i].size();
         }

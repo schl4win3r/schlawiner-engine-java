@@ -26,6 +26,7 @@ import io.schlawiner.engine.game.Numbers;
 import io.schlawiner.engine.game.Player;
 import io.schlawiner.engine.game.Players;
 
+/** Scoreboard with all information ({@link Players}, {@link NumberScore}, {@link PlayerScore}) */
 public class Scoreboard {
 
     private final Players players;
@@ -51,14 +52,14 @@ public class Scoreboard {
         }
     }
 
-    public void setScore(final int numberIndex, final Player player, final String term, final int difference) {
+    public void score(final int numberIndex, final Player player, final String term, final int difference) {
         Score score = new Score(term, difference);
         if (numberIndex > -1 && numberIndex < numberScores.length) {
-            numberScores[numberIndex].setScore(player, score);
+            numberScores[numberIndex].score(player, score);
         }
         int playerIndex = players.indexOf(player);
         if (playerIndex > -1 && playerIndex < players.size()) {
-            playerScores[playerIndex].setScore(numberIndex, score);
+            playerScores[playerIndex].score(numberIndex, score);
         }
         if (playerSums.containsKey(player)) {
             int newScore = playerSums.get(player) + score.difference();
@@ -66,28 +67,28 @@ public class Scoreboard {
         }
     }
 
-    public Score getScore(final Player player, final int numberIndex) {
-        return numberScores[numberIndex].getScore(player);
+    public Score score(final Player player, final int numberIndex) {
+        return numberScores[numberIndex].score(player);
     }
 
-    public List<NumberScore> getNumberScores() {
+    public List<NumberScore> numberScores() {
         return Arrays.asList(numberScores);
     }
 
-    public List<PlayerScore> getPlayerScores() {
+    public List<PlayerScore> playerScores() {
         ArrayList<PlayerScore> list = new ArrayList<>();
         Collections.addAll(list, playerScores);
         return list;
     }
 
-    public int getSummedScore(final Player player) {
+    public int summedScore(final Player player) {
         if (playerSums.containsKey(player)) {
             return playerSums.get(player);
         }
         return 0;
     }
 
-    public List<Player> getWinners() {
+    public List<Player> winners() {
         int min = Integer.MAX_VALUE;
         for (Integer sum : playerSums.values()) {
             min = Math.min(min, sum);

@@ -50,12 +50,12 @@ class TermBuilder {
 
     private TermBuilder assign(final Node node) {
         if (terms.isEmpty()) {
-            throw new TermException(String.format("Invalid term: '%s'", expression));
+            throw new TermException("Invalid term: '%s'".formatted(expression));
         }
 
         Term e = terms.peek();
         add(e, node);
-        while (e != null && e.isComplete()) {
+        while (e != null && e.complete()) {
             current = terms.pop();
             e = terms.isEmpty() ? null : terms.peek();
         }
@@ -63,17 +63,17 @@ class TermBuilder {
     }
 
     private void add(final Term parent, final Node child) {
-        // fill in right then left, order is important here!
-        if (parent.getRight() == null) {
-            parent.setRight(child);
-        } else if (parent.getLeft() == null) {
-            parent.setLeft(child);
+        // assign right then left, order is important!
+        if (parent.right() == null) {
+            parent.right(child);
+        } else if (parent.left() == null) {
+            parent.left(child);
         }
     }
 
     Term build() {
         if (!terms.isEmpty()) {
-            throw new TermException(String.format("Invalid term: '%s'", expression));
+            throw new TermException("Invalid term: '%s'".formatted(expression));
         }
         current.hasVariables = variablesAdded;
         return current;

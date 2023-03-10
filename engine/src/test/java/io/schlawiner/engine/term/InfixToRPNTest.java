@@ -22,13 +22,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InfixToRPNTest {
 
-    private static final String[][] PERMUTATIONS = new String[][] { { "a + b + c", "a b + c +" }, { "a - b - c", "a b - c -" },
-            { "a * b * c", "a b * c *" }, { "a / b / c", "a b / c /" }, { "a + b - c", "a b + c -" },
-            { "a * b / c", "a b * c /" }, { "a * b + c", "a b * c +" }, { "(a + b) * c", "a b + c *" },
-            { "a * b - c", "a b * c -" }, { "a - b * c", "a b c * -" }, { "(a - b) * c", "a b - c *" },
-            { "a / b + c", "a b / c +" }, { "(a + b) / c", "a b + c /" }, { "a / (b + c)", "a b c + /" },
-            { "a / b - c", "a b / c -" }, { "a - b / c", "a b c / -" }, { "(a - b) / c", "a b - c /" },
-            { "a / (b - c)", "a b c - /" }, };
+    // @formatter:off
+    private static final String[][] PERMUTATIONS = new String[][] {
+            { "a + b + c", "a b + c +" },
+            { "a - b - c", "a b - c -" },
+            { "a * b * c", "a b * c *" },
+            { "a / b / c", "a b / c /" },
+            { "a + b - c", "a b + c -" },
+            { "a * b / c", "a b * c /" },
+            { "a * b + c", "a b * c +" },
+            { "(a + b) * c", "a b + c *" },
+            { "a * b - c", "a b * c -" },
+            { "a - b * c", "a b c * -" },
+            { "(a - b) * c", "a b - c *" },
+            { "a / b + c", "a b / c +" },
+            { "(a + b) / c", "a b + c /" },
+            { "a / (b + c)", "a b c + /" },
+            { "a / b - c", "a b / c -" },
+            { "a - b / c", "a b c / -" },
+            { "(a - b) / c", "a b - c /" },
+            { "a / (b - c)", "a b c - /" },
+    };
+    // @formatter:on
 
     @Test
     void nil() {

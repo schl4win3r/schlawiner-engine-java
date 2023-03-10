@@ -99,20 +99,20 @@ public class PlayerScore {
         return "PlayerScore{" + player + ": " + scores + '}';
     }
 
-    void setScore(final int numberIndex, final Score score) {
+    void score(final int numberIndex, final Score score) {
         if (numberIndex > -1 && numberIndex < scores.size()) {
             scores.set(numberIndex, score);
         }
     }
 
-    Score getScore(final int numberIndex) {
+    Score score(final int numberIndex) {
         if (numberIndex > -1 && numberIndex < scores.size()) {
             return scores.get(numberIndex);
         }
         return null;
     }
 
-    Player getPlayer() {
+    Player player() {
         return player;
     }
 }

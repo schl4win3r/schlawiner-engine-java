@@ -24,7 +24,7 @@ final class TermParser {
 
         String[] rpn = InfixToRPN.infixToRPN(expression);
         if (rpn.length == 0) {
-            throw new TermException(String.format("Invalid term: '%s'", expression));
+            throw new TermException("Invalid term: '%s'".formatted(expression));
         }
 
         TermBuilder termBuilder = new TermBuilder(expression);
@@ -42,8 +42,8 @@ final class TermParser {
         }
 
         Term term = termBuilder.build();
-        if (!term.isComplete()) {
-            throw new TermException(String.format("Invalid term: '%s'", expression));
+        if (!term.complete()) {
+            throw new TermException("Invalid term: '%s'".formatted(expression));
         }
         return term;
     }

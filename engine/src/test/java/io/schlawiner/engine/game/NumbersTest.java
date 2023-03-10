@@ -38,7 +38,7 @@ class NumbersTest {
         assertEquals(10, numbers.size());
         assertTrue(0 != numbers.next());
         assertTrue(numbers.hasNext());
-        assertFalse(numbers.isEmpty());
+        assertFalse(numbers.empty());
 
     }
 
@@ -51,6 +51,6 @@ class NumbersTest {
         assertTrue(0 != numbers.current());
         assertTrue(0 != numbers.next());
         assertTrue(numbers.hasNext());
-        assertFalse(numbers.isEmpty());
+        assertFalse(numbers.empty());
     }
 }

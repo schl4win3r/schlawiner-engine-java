@@ -23,10 +23,13 @@ import io.schlawiner.engine.algorithm.Solution;
 import io.schlawiner.engine.algorithm.Solutions;
 import io.schlawiner.engine.score.Scoreboard;
 import io.schlawiner.engine.term.Term;
+import io.schlawiner.engine.term.TermException;
 
 import static java.lang.Math.abs;
 
-/** Implements the basic game workflow w/o timout handling. Timeouts are meant to be implemented outside this class. */
+/**
+ * Implements the basic game workflow w/o timout handling. Timeouts are meant to be implemented outside this class.
+ */
 public class Game {
 
     private final String id;
@@ -39,7 +42,6 @@ public class Game {
     private Dice dice;
     private boolean canceled;
 
-    /** Starts a new game. The retry counter of all human players is set to {@link Settings#retries()}. */
     public Game(final String name, final Players players, final Numbers numbers, final Algorithm algorithm,
             final Settings settings) {
         this.id = UUID.randomUUID().toString();
@@ -50,6 +52,10 @@ public class Game {
         this.settings = settings;
         this.scoreboard = new Scoreboard(players, numbers);
         this.canceled = false;
+
+        for (Player player : this.players) {
+            player.retries(settings.retries());
+        }
     }
 
     @Override
@@ -68,10 +74,12 @@ public class Game {
         return Objects.hash(id);
     }
 
-    /** Passes the dice to the next player. If the player is the first player, then it's the next number's turn. */
+    /**
+     * Passes the dice to the next player. If the player is the first player, then it's the next number's turn.
+     */
     public void next() {
         players.next();
-        if (players.isFirst()) {
+        if (players.first()) {
             numbers.next();
         }
     }
@@ -81,10 +89,12 @@ public class Game {
      *         {@code false} otherwise
      */
     public boolean hasNext() {
-        return (numbers.hasNext() || !players.isLast()) && !canceled;
+        return (numbers.hasNext() || !players.last()) && !canceled;
     }
 
-    /** Sets the specified dice numbers. */
+    /**
+     * Sets the specified dice numbers.
+     */
     public void dice(final Dice dice) {
         this.dice = dice;
     }
@@ -113,12 +123,16 @@ public class Game {
         score("Skipped", settings.penalty());
     }
 
-    /** Cancels this game */
+    /**
+     * Cancels this game
+     */
     public void cancel() {
         canceled = true;
     }
 
-    /** Scores {@link Settings#penalty()} points as penalty. Meant to be called after a timeout. */
+    /**
+     * Scores {@link Settings#penalty()} points as penalty. Meant to be called after a timeout.
+     */
     public void timeout() {
         score("Timeout", settings.penalty());
     }
@@ -130,8 +144,10 @@ public class Game {
      * Meant to be called for human players.
      *
      * @return the difference between the calculated solution and the current number
+     * @throws DiceException if the dice numbers aren't used correctly
+     * @throws TermException if the expression isn't a valid term
      */
-    public Calculation calculate(final String expression) {
+    public Calculation calculate(final String expression) throws DiceException, TermException {
         Calculation calculation;
         Term term = Term.valueOf(expression);
         DiceValidator.validate(dice, term);
@@ -140,9 +156,9 @@ public class Game {
         int difference = abs(result - numbers.current());
         if (difference > 0) {
             Solutions solutions = algorithm.compute(dice.numbers()[0], dice.numbers()[1], dice.numbers()[2], numbers.current());
-            calculation = new Calculation(term, difference, numbers.current(), solutions.bestSolution());
+            calculation = new Calculation(term, numbers.current(), solutions.bestSolution());
         } else {
-            calculation = new Calculation(term, difference, numbers.current(), new Solution(term.print(), term.eval()));
+            calculation = new Calculation(term, numbers.current(), new Solution(term.print(), result));
         }
         return calculation;
     }
@@ -156,53 +172,57 @@ public class Game {
      * @return the best solution based on the level
      */
     public Solution solve() {
-        Solutions solutions = algorithm.compute(dice.numbers()[0], dice.numbers()[1], dice.numbers()[2], numbers.current());
-        return solutions.bestSolution(settings.level());
+        return algorithm.compute(dice.numbers()[0], dice.numbers()[1], dice.numbers()[2], numbers.current())
+                .bestSolution(settings.level());
     }
 
-    /** Stores the difference to the current number for the current player in the score board. */
+    /**
+     * Stores the difference to the current number for the current player in the score board.
+     */
     public void score(final Term term, final int difference) {
         score(term.print(), difference);
     }
 
     public void score(final String term, final int difference) {
-        scoreboard.setScore(numbers.index(), players.current(), term, difference);
+        scoreboard.score(numbers.index(), players.current(), term, difference);
     }
 
-    /** Stores the solution for the current player in the score board. */
+    /**
+     * Stores the solution for the current player in the score board.
+     */
     public void score(final Solution solution) {
-        scoreboard.setScore(numbers.index(), players.current(), solution.term(), abs(solution.value() - numbers.current()));
+        scoreboard.score(numbers.index(), players.current(), solution.term(), abs(solution.result() - numbers.current()));
     }
 
-    public String getId() {
+    public String id() {
         return id;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public Players getPlayers() {
+    public Players players() {
         return players;
     }
 
-    public Numbers getNumbers() {
+    public Numbers numbers() {
         return numbers;
     }
 
-    public Algorithm getAlgorithm() {
+    public Algorithm algorithm() {
         return algorithm;
     }
 
-    public Dice getDice() {
+    public Dice dice() {
         return dice;
     }
 
-    public Scoreboard getScoreboard() {
+    public Scoreboard scoreboard() {
         return scoreboard;
     }
 
-    public boolean isCanceled() {
+    public boolean canceled() {
         return canceled;
     }
 }

@@ -17,40 +17,44 @@ package io.schlawiner.engine.term;
 
 final class Value implements Node {
 
-    final int value;
+    private final int value;
     private Node parent;
 
     Value(final int value) {
         this.value = value;
     }
 
+    int value() {
+        return value;
+    }
+
     @Override
-    public Node getParent() {
+    public Node parent() {
         return parent;
     }
 
     @Override
-    public void setParent(final Node parent) {
+    public void parent(final Node parent) {
         this.parent = parent;
     }
 
     @Override
-    public Node getLeft() {
+    public Node left() {
         return null;
     }
 
     @Override
-    public void setLeft(final Node left) {
+    public void left(final Node left) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Node getRight() {
+    public Node right() {
         return null;
     }
 
     @Override
-    public void setRight(final Node right) {
+    public void right(final Node right) {
         throw new UnsupportedOperationException();
     }
 }

@@ -56,23 +56,23 @@ public class Room {
         return "Room(" + name + " by " + owner + ": " + players.size() + " / " + limit + ")";
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public int getLimit() {
+    public int limit() {
         return limit;
     }
 
-    public Player getOwner() {
+    public Player owner() {
         return owner;
     }
 
-    public Iterable<Player> getPlayers() {
+    public Iterable<Player> players() {
         return unmodifiableCollection(players);
     }
 
-    public boolean isEmpty() {
+    public boolean empty() {
         return players.isEmpty();
     }
 

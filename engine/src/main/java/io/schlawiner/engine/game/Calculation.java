@@ -18,13 +18,20 @@ package io.schlawiner.engine.game;
 import io.schlawiner.engine.algorithm.Solution;
 import io.schlawiner.engine.term.Term;
 
-public record Calculation(Term term, int difference, int currentNumber, Solution bestSolution) {
+import static java.lang.Math.abs;
+
+/** Calculation of a human player */
+public record Calculation(Term term, int target, Solution bestSolution) {
+
+    public int difference() {
+        return abs(term.eval() - target);
+    }
 
     public boolean best() {
-        return difference == 0 || difference == bestDifference();
+        return difference() == 0 || difference() == bestDifference();
     }
 
     public int bestDifference() {
-        return Math.abs(bestSolution.value() - currentNumber);
+        return abs(bestSolution.result() - target);
     }
 }

@@ -46,36 +46,36 @@ class ScoreboardTest {
 
     @Test
     void newInstance() {
-        assertFalse(scoreboard.getNumberScores().isEmpty());
-        assertFalse(scoreboard.getPlayerScores().isEmpty());
+        assertFalse(scoreboard.numberScores().isEmpty());
+        assertFalse(scoreboard.playerScores().isEmpty());
     }
 
     @Test
     void setScore() {
-        scoreboard.setScore(0, foo, "1", 1);
-        assertEquals(1, scoreboard.getNumberScores().get(0).getScore(foo).difference());
+        scoreboard.score(0, foo, "1", 1);
+        assertEquals(1, scoreboard.numberScores().get(0).score(foo).difference());
     }
 
     @Test
     void oneWinner() {
-        scoreboard.setScore(0, foo, "0", 0);
-        scoreboard.setScore(0, bar, "1", 1);
-        scoreboard.setScore(1, foo, "1", 1);
-        scoreboard.setScore(1, bar, "1", 1);
+        scoreboard.score(0, foo, "0", 0);
+        scoreboard.score(0, bar, "1", 1);
+        scoreboard.score(1, foo, "1", 1);
+        scoreboard.score(1, bar, "1", 1);
 
-        assertEquals(1, scoreboard.getWinners().size());
-        assertEquals(foo, scoreboard.getWinners().get(0));
+        assertEquals(1, scoreboard.winners().size());
+        assertEquals(foo, scoreboard.winners().get(0));
     }
 
     @Test
     void twoWinner() {
-        scoreboard.setScore(0, foo, "0", 0);
-        scoreboard.setScore(0, bar, "0", 0);
-        scoreboard.setScore(1, foo, "1", 1);
-        scoreboard.setScore(1, bar, "1", 1);
+        scoreboard.score(0, foo, "0", 0);
+        scoreboard.score(0, bar, "0", 0);
+        scoreboard.score(1, foo, "1", 1);
+        scoreboard.score(1, bar, "1", 1);
 
-        assertEquals(2, scoreboard.getWinners().size());
-        assertTrue(scoreboard.getWinners().contains(foo));
-        assertTrue(scoreboard.getWinners().contains(bar));
+        assertEquals(2, scoreboard.winners().size());
+        assertTrue(scoreboard.winners().contains(foo));
+        assertTrue(scoreboard.winners().contains(bar));
     }
 }

@@ -42,7 +42,7 @@ class PlayerTest {
     @Test
     void retry() {
         assertEquals(5, foo.retries());
-        foo = foo.retry();
+        foo.retry();
         assertEquals(4, foo.retries());
     }
 }

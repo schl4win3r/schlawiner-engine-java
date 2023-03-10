@@ -19,10 +19,6 @@ import java.util.Random;
 
 public record Dice(int[] numbers) {
 
-    Dice(final int a, final int b, final int c) {
-        this(new int[] { a, b, c });
-    }
-
     /**
      * New dice with three random numbers
      */
@@ -30,6 +26,10 @@ public record Dice(int[] numbers) {
         Random random = new Random();
         int[] numbers = new int[] { 1 + random.nextInt(6), 1 + random.nextInt(6), 1 + random.nextInt(6) };
         return new Dice(numbers);
+    }
+
+    Dice(final int a, final int b, final int c) {
+        this(new int[] { a, b, c });
     }
 
     @Override

@@ -87,7 +87,7 @@ public class Numbers implements Iterable<Integer> {
         return -1;
     }
 
-    public boolean isEmpty() {
+    public boolean empty() {
         return numbers.length == 0;
     }
 }

@@ -39,7 +39,7 @@ public final class Term implements Node {
 
     public int eval(final Assignment... assignments) {
         if (hasVariables && assignments.length == 0) {
-            throw new TermException(String.format("Unable to eval term. No assignments for %s", getVariables()));
+            throw new TermException("Unable to eval term. No assignments for %s".formatted(getVariables()));
         }
         return new EvalIterator().eval(this, Assignment.byName(assignments));
     }
@@ -48,7 +48,12 @@ public final class Term implements Node {
         return new PrintIterator().print(this, Assignment.byName(assignments));
     }
 
-    boolean isComplete() {
+    @Override
+    public String toString() {
+        return print();
+    }
+
+    boolean complete() {
         return left != null && right != null;
     }
 
@@ -65,35 +70,35 @@ public final class Term implements Node {
     }
 
     @Override
-    public Node getParent() {
+    public Node parent() {
         return parent;
     }
 
     @Override
-    public void setParent(final Node parent) {
+    public void parent(final Node parent) {
         this.parent = parent;
     }
 
     @Override
-    public Node getLeft() {
+    public Node left() {
         return left;
     }
 
     @Override
-    public void setLeft(final Node left) {
+    public void left(final Node left) {
         this.left = left;
-        this.left.setParent(this);
+        this.left.parent(this);
     }
 
     @Override
-    public Node getRight() {
+    public Node right() {
         return right;
     }
 
     @Override
-    public void setRight(final Node right) {
+    public void right(final Node right) {
         this.right = right;
-        this.right.setParent(this);
+        this.right.parent(this);
     }
 
     // ------------------------------------------------------ iterators
@@ -110,8 +115,8 @@ public final class Term implements Node {
             if (node != null) {
                 switch (node) {
                     case Term term -> {
-                        postOrder(node.getLeft(), stack, assignments);
-                        postOrder(node.getRight(), stack, assignments);
+                        postOrder(node.left(), stack, assignments);
+                        postOrder(node.right(), stack, assignments);
                         int right = stack.pop();
                         int left = stack.pop();
                         int result = switch (term.operator) {
@@ -128,12 +133,12 @@ public final class Term implements Node {
                         stack.push(result);
                     }
                     case Variable variable -> {
-                        if (!assignments.containsKey(variable.name)) {
-                            throw new TermException(String.format("Unable to eval term. Missing assignment %s", variable.name));
+                        if (!assignments.containsKey(variable.name())) {
+                            throw new TermException("Unable to eval term. Missing assignment %s".formatted(variable.name()));
                         }
-                        stack.push(assignments.get(variable.name));
+                        stack.push(assignments.get(variable.name()));
                     }
-                    case Value value -> stack.push(value.value);
+                    case Value value -> stack.push(value.value());
                 }
             }
         }
@@ -149,41 +154,41 @@ public final class Term implements Node {
 
         private void inOrder(final Node node, final Map<String, Integer> assignments, final StringBuilder builder) {
             if (node != null) {
-                inOrder(node.getLeft(), assignments, builder);
+                inOrder(node.left(), assignments, builder);
                 switch (node) {
                     case Term term -> builder.append(" ").append(term.operator).append(" ");
                     case Variable variable -> {
                         boolean needsBracket = needsBracket(node);
-                        if (needsBracket && node == node.getParent().getLeft()) {
+                        if (needsBracket && node == node.parent().left()) {
                             builder.append("(");
                         }
-                        if (assignments.containsKey(variable.name)) {
-                            builder.append(assignments.get(variable.name));
+                        if (assignments.containsKey(variable.name())) {
+                            builder.append(assignments.get(variable.name()));
                         } else {
-                            builder.append(variable.name);
+                            builder.append(variable.name());
                         }
-                        if (needsBracket && node == node.getParent().getRight()) {
+                        if (needsBracket && node == node.parent().right()) {
                             builder.append(")");
                         }
                     }
                     case Value value -> {
                         boolean needsBracket = needsBracket(node);
-                        if (needsBracket && node == node.getParent().getLeft()) {
+                        if (needsBracket && node == node.parent().left()) {
                             builder.append("(");
                         }
-                        builder.append(value.value);
-                        if (needsBracket && node == node.getParent().getRight()) {
+                        builder.append(value.value());
+                        if (needsBracket && node == node.parent().right()) {
                             builder.append(")");
                         }
                     }
                 }
-                inOrder(node.getRight(), assignments, builder);
+                inOrder(node.right(), assignments, builder);
             }
         }
 
         private boolean needsBracket(final Node node) {
-            if (node.getParent() instanceof Term parent && node.getParent().getParent() instanceof Term) {
-                Term grandparent = (Term) parent.getParent();
+            if (node.parent() instanceof Term parent && node.parent().parent() instanceof Term) {
+                Term grandparent = (Term) parent.parent();
                 return parent.operator.precedence() < grandparent.operator.precedence();
             }
             return false;
@@ -200,11 +205,11 @@ public final class Term implements Node {
 
         private void inOrder(final Node node, final List<Integer> numbers) {
             if (node != null) {
-                inOrder(node.getLeft(), numbers);
+                inOrder(node.left(), numbers);
                 if (node instanceof Value v) {
-                    numbers.add(v.value);
+                    numbers.add(v.value());
                 }
-                inOrder(node.getRight(), numbers);
+                inOrder(node.right(), numbers);
             }
         }
     }
@@ -219,11 +224,11 @@ public final class Term implements Node {
 
         private void inOrder(final Node node, final List<Variable> variables) {
             if (node != null) {
-                inOrder(node.getLeft(), variables);
+                inOrder(node.left(), variables);
                 if (node instanceof Variable v) {
                     variables.add(v);
                 }
-                inOrder(node.getRight(), variables);
+                inOrder(node.right(), variables);
             }
         }
     }
@@ -237,11 +242,11 @@ public final class Term implements Node {
 
         private void inOrder(final Node node, final List<Operator> operators) {
             if (node != null) {
-                inOrder(node.getLeft(), operators);
+                inOrder(node.left(), operators);
                 if (node instanceof Term t) {
                     operators.add(t.operator);
                 }
-                inOrder(node.getRight(), operators);
+                inOrder(node.right(), operators);
             }
         }
     }

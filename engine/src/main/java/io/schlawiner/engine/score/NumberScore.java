@@ -108,11 +108,11 @@ public class NumberScore {
         return "NumberScore{#" + index + ": " + number + ", " + scores + '}';
     }
 
-    int getNumber() {
+    int number() {
         return number;
     }
 
-    Score getScore(final Player player) {
+    Score score(final Player player) {
         Score score = scores.get(player);
         if (score != null) {
             return score;
@@ -125,7 +125,7 @@ public class NumberScore {
         return score != null && score != Score.EMPTY;
     }
 
-    void setScore(final Player player, final Score score) {
+    void score(final Player player, final Score score) {
         if (scores.containsKey(player)) {
             scores.put(player, score);
         }

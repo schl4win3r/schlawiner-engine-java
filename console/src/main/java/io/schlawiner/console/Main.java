@@ -46,12 +46,12 @@ public class Main {
         new Main(textIO, terminal).start();
     }
 
-    private final TextIO textIO;
-    private final TextTerminal<?> terminal;
-    private final List<Player> players;
-    private Settings settings;
+    final TextIO textIO;
+    final TextTerminal<?> terminal;
+    final List<Player> players;
+    Settings settings;
 
-    private Main(final TextIO textIO, final TextTerminal<?> terminal) {
+    Main(final TextIO textIO, final TextTerminal<?> terminal) {
         this.textIO = textIO;
         this.terminal = terminal;
         this.players = new ArrayList<>();
@@ -60,7 +60,7 @@ public class Main {
         terminal.println(Texts.BANNER);
     }
 
-    private void start() {
+    void start() {
         while (true) {
             terminal.print(Texts.MAIN);
             int option = textIO.newIntInputReader().withMinVal(0).withMaxVal(3).read("Please choose");
@@ -74,7 +74,7 @@ public class Main {
         }
     }
 
-    private void settings() {
+    void settings() {
         // noinspection InfiniteLoopStatement
         while (true) {
             terminal.printf(Texts.SETTINGS, settings.numbers(), settings.retries(), settings.penalty(), settings.level());
@@ -93,7 +93,7 @@ public class Main {
         }
     }
 
-    private void players() {
+    void players() {
         // noinspection InfiniteLoopStatement
         while (true) {
             terminal.print(Texts.PLAYERS);
@@ -133,7 +133,7 @@ public class Main {
         }
     }
 
-    private void play() {
+    void play() {
         Game game = new Game("console-game", new Players(players), new Numbers(settings.numbers()), new OperationAlgorithm(),
                 settings);
 
@@ -142,18 +142,18 @@ public class Main {
             game.next();
             game.dice(Dice.random());
 
-            Players players = game.getPlayers();
+            Players players = game.players();
             Player currentPlayer = players.current();
-            int currentNumber = game.getNumbers().current();
-            if (players.isFirst()) {
+            int currentNumber = game.numbers().current();
+            if (players.first()) {
                 printScoreboard(game);
             }
             if (currentPlayer.human()) {
                 String expression;
                 boolean validTerm = false;
-                while (!validTerm && !game.isCanceled()) {
-                    String prompt = String.format("%s try to reach %d using %s", currentPlayer.name(), currentNumber,
-                            game.getDice());
+                while (!validTerm && !game.canceled()) {
+                    String prompt = "%s try to reach %d using %s".formatted(currentPlayer.name(), currentNumber,
+                            game.dice());
                     try {
                         expression = textIO.newStringInputReader().read(prompt);
                         if ("retry".equalsIgnoreCase(expression)) {
@@ -185,14 +185,14 @@ public class Main {
             } else {
                 Solution solution = game.solve();
                 game.score(solution);
-                terminal.printf("%s diced %s. Solution: %s%n", currentPlayer.name(), game.getDice(), solution);
+                terminal.printf("%s diced %s. Solution: %s%n", currentPlayer.name(), game.dice(), solution);
             }
         }
 
-        if (!game.isCanceled()) {
+        if (!game.canceled()) {
             printScoreboard(game);
             terminal.printf("Game over. ");
-            List<Player> winners = game.getScoreboard().getWinners();
+            List<Player> winners = game.scoreboard().winners();
             if (winners.size() == 1) {
                 terminal.printf("The winner is %s!%n", winners.get(0).name());
             } else {
@@ -202,27 +202,27 @@ public class Main {
         start();
     }
 
-    private void printScoreboard(final Game game) {
+    void printScoreboard(final Game game) {
         // header
         terminal.println();
         terminal.printf("    ");
-        for (Player player : game.getPlayers()) {
+        for (Player player : game.players()) {
             terminal.printf("| %-20s ", player.name());
         }
         terminal.println();
         terminal.printf("====");
-        for (Player ignored : game.getPlayers()) {
+        for (Player ignored : game.players()) {
             terminal.printf("+=================+====");
         }
         terminal.println();
 
         // body
         int numberIndex = 0;
-        for (int number : game.getNumbers()) {
+        for (int number : game.numbers()) {
             terminal.printf("%3d ", number);
-            for (Player player : game.getPlayers()) {
-                Score score = game.getScoreboard().getScore(player, numberIndex);
-                String difference = score.difference() == -1 ? "  " : String.format("%2d", score.difference());
+            for (Player player : game.players()) {
+                Score score = game.scoreboard().score(player, numberIndex);
+                String difference = score.difference() == -1 ? "  " : "%2d".formatted(score.difference());
                 terminal.printf("| %15s | %s ", (score.term() == null ? "" : score.term()), difference);
             }
             terminal.println();
@@ -231,13 +231,13 @@ public class Main {
 
         // footer
         terminal.printf("====");
-        for (Player ignored : game.getPlayers()) {
+        for (Player ignored : game.players()) {
             terminal.printf("+=================+====");
         }
         terminal.println();
         terminal.printf("    ");
-        for (Player player : game.getPlayers()) {
-            terminal.printf("|                 | %2d ", game.getScoreboard().getSummedScore(player));
+        for (Player player : game.players()) {
+            terminal.printf("|                 | %2d ", game.scoreboard().summedScore(player));
         }
         terminal.println();
         terminal.println();
