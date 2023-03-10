@@ -148,6 +148,7 @@
                         <staticAfter>true</staticAfter>
                         <excludes>
                             <exclude>**/Node.java</exclude>
+                            <exclude>**/Term.java</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
@@ -195,12 +196,6 @@
                             <version>${version.checkstyle.config}</version>
                         </dependency>
                     </dependencies>
-                </plugin>
-                <plugin><groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <compilerArgs>--enable-preview</compilerArgs>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

@@ -25,95 +25,95 @@ final class Operations {
         if ((a + b) % c != 0) {
             return Solution.INVALID;
         }
-        return new Solution("(" + a + " + " + b + ") / " + c, (a + b) / c);
+        return new Solution("(%d + %d) / %d".formatted(a, b, c), (a + b) / c);
     }
 
     static Solution addDivide2(final int a, final int b, final int c) {
         if (a % (b + c) != 0) {
             return Solution.INVALID;
         }
-        return new Solution(a + " / (" + b + " + " + c + ")", a / (b + c));
+        return new Solution("%d / (%d + %d)".formatted(a, b, c), a / (b + c));
     }
 
     static Solution addMultiply(final int a, final int b, final int c) {
-        return new Solution("(" + a + " + " + b + ") * " + c, (a + b) * c);
+        return new Solution("(%d + %d) * %d".formatted(a, b, c), (a + b) * c);
     }
 
     static Solution addSubtract(final int a, final int b, final int c) {
-        return new Solution(a + " + " + b + " - " + c, a + b - c);
+        return new Solution("%d + %d - %d".formatted(a, b, c), a + b - c);
     }
 
     static Solution divide(final int a, final int b, final int c) {
         if (a % b != 0 || (a / b) % c != 0) {
             return Solution.INVALID;
         }
-        return new Solution(a + " / " + b + " / " + c, a / b / c);
+        return new Solution("%d / %d / %d".formatted(a, b, c), a / b / c);
     }
 
     static Solution divideAdd(final int a, final int b, final int c) {
         if (a % b != 0) {
             return Solution.INVALID;
         }
-        return new Solution(a + " / " + b + " + " + c, a / b + c);
+        return new Solution("%d / %d + %d".formatted(a, b, c), a / b + c);
     }
 
     static Solution divideSubtract1(final int a, final int b, final int c) {
         if (a % b != 0) {
             return Solution.INVALID;
         }
-        return new Solution(a + " / " + b + " - " + c, a / b - c);
+        return new Solution("%d / %d - %d".formatted(a, b, c), a / b - c);
     }
 
     static Solution divideSubtract2(final int a, final int b, final int c) {
         if (b % c != 0) {
             return Solution.INVALID;
         }
-        return new Solution(a + " - " + b + " / " + c, a - b / c);
+        return new Solution("%d - %d / %d".formatted(a, b, c), a - b / c);
     }
 
     static Solution multiply(final int a, final int b, final int c) {
-        return new Solution(a + " * " + b + " * " + c, a * b * c);
+        return new Solution("%d * %d * %d".formatted(a, b, c), a * b * c);
     }
 
     static Solution multiplyAdd(final int a, final int b, final int c) {
-        return new Solution(a + " * " + b + " + " + c, a * b + c);
+        return new Solution("%d * %d + %d".formatted(a, b, c), a * b + c);
     }
 
     static Solution multiplyDivide(final int a, final int b, final int c) {
         if ((a * b) % c != 0) {
             return Solution.INVALID;
         }
-        return new Solution(a + " * " + b + " / " + c, a * b / c);
+        return new Solution("%d * %d / %d".formatted(a, b, c), a * b / c);
     }
 
     static Solution multiplySubtract1(final int a, final int b, final int c) {
-        return new Solution(a + " * " + b + " - " + c, a * b - c);
+        return new Solution("%d * %d - %d".formatted(a, b, c), a * b - c);
     }
 
     static Solution multiplySubtract2(final int a, final int b, final int c) {
-        return new Solution(a + " - " + b + " * " + c, a - b * c);
+        return new Solution("%d - %d * %d".formatted(a, b, c), a - b * c);
     }
 
     static Solution subtract(final int a, final int b, final int c) {
-        return new Solution(a + " - " + b + " - " + c, a - b - c);
+        return new Solution("%d - %d - %d".formatted(a, b, c), a - b - c);
     }
 
     static Solution subtractDivide1(final int a, final int b, final int c) {
         if ((a - b) % c != 0) {
             return Solution.INVALID;
         }
-        return new Solution("(" + a + " - " + b + ") / " + c, (a - b) / c);
+        return new Solution("(%d - %d) / %d".formatted(a, b, c), (a - b) / c);
     }
 
     static Solution subtractDivide2(final int a, final int b, final int c) {
         if (b - c == 0 || a % (b - c) != 0) {
             return Solution.INVALID;
         }
-        return new Solution(a + " / (" + b + " - " + c + ")", a / (b - c));
+        return new Solution("%d / (%d - %d)".formatted(a, b, c), a / (b - c));
     }
 
     static Solution subtractMultiply(final int a, final int b, final int c) {
-        return new Solution("(" + a + " - " + b + ") * " + c, (a - b) * c);
+        return new Solution("(%d - %d) * %d".formatted(a, b, c), (a - b) * c);
     }
 
     private Operations() {

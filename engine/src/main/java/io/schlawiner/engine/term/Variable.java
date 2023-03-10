@@ -53,9 +53,4 @@ final class Variable implements Node {
     public void setRight(final Node right) {
         throw new UnsupportedOperationException();
     }
-
-    @Override
-    public String toString() {
-        return name;
-    }
 }

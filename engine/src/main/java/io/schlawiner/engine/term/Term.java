@@ -107,30 +107,34 @@ public final class Term implements Node {
         }
 
         private void postOrder(final Node node, final Stack<Integer> stack, final Map<String, Integer> assignments) {
-            if (node instanceof Term t) {
-                postOrder(node.getLeft(), stack, assignments);
-                postOrder(node.getRight(), stack, assignments);
-                int right = stack.pop();
-                int left = stack.pop();
-                int result = switch (t.operator) {
-                    case PLUS -> left + right;
-                    case MINUS -> left - right;
-                    case TIMES -> left * right;
-                    case DIVIDED -> {
-                        if (right == 0 || left % right != 0) {
-                            throw new TermException("Illegal division: " + left + " / " + right);
-                        }
-                        yield left / right;
+            if (node != null) {
+                switch (node) {
+                    case Term term -> {
+                        postOrder(node.getLeft(), stack, assignments);
+                        postOrder(node.getRight(), stack, assignments);
+                        int right = stack.pop();
+                        int left = stack.pop();
+                        int result = switch (term.operator) {
+                            case PLUS -> left + right;
+                            case MINUS -> left - right;
+                            case TIMES -> left * right;
+                            case DIVIDED -> {
+                                if (right == 0 || left % right != 0) {
+                                    throw new TermException("Illegal division: " + left + " / " + right);
+                                }
+                                yield left / right;
+                            }
+                        };
+                        stack.push(result);
                     }
-                };
-                stack.push(result);
-            } else if (node instanceof Variable v) {
-                if (!assignments.containsKey(v.name)) {
-                    throw new TermException(String.format("Unable to eval term. Missing assignment %s", v.name));
+                    case Variable variable -> {
+                        if (!assignments.containsKey(variable.name)) {
+                            throw new TermException(String.format("Unable to eval term. Missing assignment %s", variable.name));
+                        }
+                        stack.push(assignments.get(variable.name));
+                    }
+                    case Value value -> stack.push(value.value);
                 }
-                stack.push(assignments.get(v.name));
-            } else if (node instanceof Value v) {
-                stack.push(v.value);
             }
         }
     }
@@ -146,25 +150,32 @@ public final class Term implements Node {
         private void inOrder(final Node node, final Map<String, Integer> assignments, final StringBuilder builder) {
             if (node != null) {
                 inOrder(node.getLeft(), assignments, builder);
-                if (node instanceof Variable || node instanceof Value) {
-                    boolean bracket = needsBracket(node);
-                    if (bracket && node == node.getParent().getLeft()) {
-                        builder.append("(");
-                    }
-                    if (node instanceof Variable var) {
-                        if (assignments.containsKey(var.name)) {
-                            builder.append(assignments.get(var.name));
-                        } else {
-                            builder.append(var.name);
+                switch (node) {
+                    case Term term -> builder.append(" ").append(term.operator).append(" ");
+                    case Variable variable -> {
+                        boolean needsBracket = needsBracket(node);
+                        if (needsBracket && node == node.getParent().getLeft()) {
+                            builder.append("(");
                         }
-                    } else {
-                        builder.append(node);
+                        if (assignments.containsKey(variable.name)) {
+                            builder.append(assignments.get(variable.name));
+                        } else {
+                            builder.append(variable.name);
+                        }
+                        if (needsBracket && node == node.getParent().getRight()) {
+                            builder.append(")");
+                        }
                     }
-                    if (bracket && node == node.getParent().getRight()) {
-                        builder.append(")");
+                    case Value value -> {
+                        boolean needsBracket = needsBracket(node);
+                        if (needsBracket && node == node.getParent().getLeft()) {
+                            builder.append("(");
+                        }
+                        builder.append(value.value);
+                        if (needsBracket && node == node.getParent().getRight()) {
+                            builder.append(")");
+                        }
                     }
-                } else if (node instanceof Term e) {
-                    builder.append(" ").append(e.operator).append(" ");
                 }
                 inOrder(node.getRight(), assignments, builder);
             }

@@ -137,7 +137,6 @@ public class TermAlgorithm extends AbstractAlgorithm implements Serializable {
         super("Algorithm based on variable terms");
     }
 
-    @SuppressWarnings("Duplicates")
     @Override
     protected void computePermutation(final int a, final int b, final int c, final int target, final Solutions solutions) {
         Assignment[] assignments = new Assignment[] { new Assignment("a", a), new Assignment("b", b), new Assignment("c", c) };
