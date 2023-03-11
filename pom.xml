@@ -79,8 +79,7 @@
         <!-- Dependency versions -->
         <version.checkstyle.config>1.0.8.Final</version.checkstyle.config>
         <version.checkstyle>10.5.0</version.checkstyle>
-        <version.junit>5.9.1</version.junit>
-        <version.quarkus>3.0.0.Alpha5</version.quarkus>
+        <version.junit>5.9.2</version.junit>
 
         <!-- Plugin versions -->
         <version.checkstyle.plugin>3.2.1</version.checkstyle.plugin>
@@ -104,8 +103,6 @@
         <maven.min.version>3.2.5</maven.min.version>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
-        <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
-        <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
     </properties>
 
     <modules>
@@ -235,12 +232,6 @@
                     <version>${version.nexus.staging.plugin}</version>
                     <extensions>true</extensions>
                 </plugin>
-                <plugin>
-                    <groupId>${quarkus.platform.group-id}</groupId>
-                    <artifactId>quarkus-maven-plugin</artifactId>
-                    <version>${version.quarkus}</version>
-                    <extensions>true</extensions>
-                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -336,18 +327,6 @@
     </build>
 
     <profiles>
-        <profile>
-            <id>native</id>
-            <activation>
-                <property>
-                    <name>native</name>
-                </property>
-            </activation>
-            <properties>
-                <skipITs>false</skipITs>
-                <quarkus.package.type>native</quarkus.package.type>
-            </properties>
-        </profile>
         <profile>
             <id>release</id>
             <build>
