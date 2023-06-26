@@ -1,4 +1,4 @@
-# Puzzle and Dice Game
+# Schlawiner Engine / Java
 
 Schlawiner is a game of dice where you have to reach numbers between 1 and 100 using the basic arithmetics +, -, * and / in any order. The game is played with three dice. Each dice number can be multiplied with 10 or 100 and must be used exactly once.
 
