@@ -1,4 +1,4 @@
-First off, thank you for considering contributing to halOS. It's people like you that make halOS such a great tool. halOS is an open source project, and we love to receive contributions from our community — you! There are many ways to contribute, from writing tutorials or blog posts, improving the documentation, submitting bug reports and feature requests or writing code which can be incorporated into halOS itself.
+First off, thank you for considering contributing to Schlawiner. It's people like you that make Schlawiner such a great tool. Schlawiner is an open source project, and we love to receive contributions from our community — you! There are many ways to contribute, from writing tutorials or blog posts, improving the documentation, submitting bug reports and feature requests or writing code which can be incorporated into Schlawiner itself.
 
 We expect all contributors and users to follow our [Code of Conduct](CODE_OF_CONDUCT.md) when communicating through project channels. These include, but are not limited to: chat, issues, code.
 
@@ -10,15 +10,15 @@ All recent development happens in the branch `main`.
 
 If you don't have one already, head to https://github.com/
 
-## Fork halOS
+## Fork Schlawiner
 
-Fork https://github.com/hal/halos-proxy into your GitHub account.
+Fork https://github.com/schl4win3r/schlawiner-engine-java into your GitHub account.
 
 ## Clone your newly forked repository onto your local machine
 
 ```bash
-git clone git@github.com:[your username]/halos-proxy.git
-cd halos-proxy
+git clone git@github.com:[your username]/schlawiner-engine-java.git
+cd schlawiner-engine-java
 ```
 
 ## Add a remote reference to upstream
@@ -26,12 +26,12 @@ cd halos-proxy
 This makes it easy to pull down changes in the project over time
 
 ```bash
-git remote add upstream git://github.com/hal/halos-proxy.git
+git remote add upstream git://github.com/schl4win3r/schlawiner-engine-java.git
 ```
 
 # Development Process
 
-This is the typical process you would follow to submit any changes to halOS.
+This is the typical process you would follow to submit any changes to Schlawiner.
 
 ## Pulling updates from upstream
 
@@ -47,8 +47,7 @@ git pull --rebase upstream main
 
 ## Discuss your planned changes (if you want feedback)
 
- * Issue Tracker - https://issues.jboss.org/browse/HAL
- * Chat - https://wildfly.zulipchat.com/#narrow/stream/174373-hal
+ * Issue Tracker - https://github.com/schl4win3r/schlawiner-engine-java/issues
 
 ## Create a simple topic branch to isolate your work (recommended)
 
@@ -58,7 +57,7 @@ git checkout -b my_cool_feature
 
 ## Make the changes
 
-Make whatever code changes, including new tests to verify your change, are necessary and ensure that the build and tests pass. Make sure your code changes apply to the rules defined in [build-config](build-config/src/main/resources/etc). This should happen automatically, but you can also execute the `./format.sh` and `./validate.sh` scripts manually before submitting your changes.
+Make whatever code changes, including new tests to verify your change, are necessary and ensure that the build and tests pass. Make sure your code changes apply to the rules defined in [etc](etc). This should happen automatically, but you can also execute the `./format.sh` and `./validate.sh` scripts manually before submitting your changes.
 
 ```bash
 mvn clean verify
