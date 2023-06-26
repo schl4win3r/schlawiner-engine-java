@@ -27,12 +27,12 @@
     </parent>
 
     <groupId>io.schlawiner</groupId>
-    <artifactId>schlawiner-parent</artifactId>
+    <artifactId>schlawiner-engine</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>Schlawiner :: Parent</name>
+    <packaging>jar</packaging>
+    <name>Schlawiner :: Engine</name>
     <description>Puzzle and dice gamne</description>
-    <url>https://github.com/hpehl/schlawiner</url>
+    <url>https://schl4win3r.github.com/</url>
     <inceptionYear>2023</inceptionYear>
 
     <organization>
@@ -80,19 +80,20 @@
         <version.checkstyle.config>1.0.8.Final</version.checkstyle.config>
         <version.checkstyle>10.5.0</version.checkstyle>
         <version.junit>5.9.2</version.junit>
+        <version.text.io>3.4.1</version.text.io>
 
         <!-- Plugin versions -->
         <version.checkstyle.plugin>3.2.1</version.checkstyle.plugin>
         <version.enforcer.plugin>3.0.0-M3</version.enforcer.plugin>
         <version.formatter.plugin>2.22.0</version.formatter.plugin>
-        <version.impsort.plugin>1.8.0</version.impsort.plugin>
+        <version.impsort.plugin>1.9.0</version.impsort.plugin>
         <version.keepachangelog>2.1.1</version.keepachangelog>
         <version.license.plugin>4.1</version.license.plugin>
         <version.nexus.staging.plugin>1.6.13</version.nexus.staging.plugin>
 
         <!-- Repos, URLs & protocols -->
-        <repo.scm.connection>git@github.com:hal/halos-proxy.git</repo.scm.connection>
-        <repo.scm.url>https://github.com/hal/halos-proxy</repo.scm.url>
+        <repo.scm.connection>git@github.com:schl4win3r/schlawiner-engine-java.git</repo.scm.connection>
+        <repo.scm.url>https://github.com/schl4win3r/schlawiner-engine-java</repo.scm.url>
         <repo.sonatype.url>https://s01.oss.sonatype.org</repo.sonatype.url>
 
         <!-- Build related -->
@@ -105,16 +106,40 @@
         <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
     </properties>
 
-    <modules>
-        <module>bom</module>
-        <module>build-config</module>
-        <module>code-parent</module>
-        <module>console</module>
-        <module>engine</module>
-    </modules>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${version.junit}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+        <dependency>
+            <groupId>org.beryx</groupId>
+            <artifactId>text-io</artifactId>
+            <version>${version.text.io}</version>
+        </dependency>
+        </dependencies>
+    </dependencyManagement>
 
-    <!-- No dependencies! Dependencies are managed in code-parent -->
-    <dependencies />
+    <dependencies>
+        <dependency>
+            <groupId>org.beryx</groupId>
+            <artifactId>text-io</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <!--
@@ -128,6 +153,9 @@
                     <groupId>net.revelc.code.formatter</groupId>
                     <artifactId>formatter-maven-plugin</artifactId>
                     <version>${version.formatter.plugin}</version>
+                    <configuration>
+                        <configFile>etc/eclipse-formatter-config.xml</configFile>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>net.revelc.code</groupId>
@@ -136,7 +164,7 @@
                     <configuration>
                         <!-- TODO
                                 Revert to <compliance>${java.version}</compliance>
-                                as soon as there's a constant for Java 19 in
+                                as soon as there's a constant for Java 20 in
                                 https://github.com/javaparser/javaparser/blob/master/javaparser-core/src/main/java/com/github/javaparser/ParserConfiguration.java
                         -->
                         <compliance>17</compliance>
@@ -156,7 +184,7 @@
                     <configuration>
                         <licenseSets>
                             <licenseSet>
-                                <header>build-config/src/main/resources/etc/license.txt</header>
+                                <header>etc/license.txt</header>
                                 <useDefaultExcludes>true</useDefaultExcludes>
                                 <excludes>
                                     <exclude>.sdkmanrc</exclude>
@@ -184,6 +212,7 @@
                         <failsOnError>true</failsOnError>
                         <includeTestSourceDirectory>true</includeTestSourceDirectory>
                         <excludes>**/*$logger.java,**/*$bundle.java</excludes>
+                        <suppressionsLocation>etc/checkstyle-suppressions.xml</suppressionsLocation>
                         <useFile />
                     </configuration>
                     <dependencies>
@@ -312,6 +341,14 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <release>${java.version}</release>
+                    <compilerArgs>--enable-preview</compilerArgs><source>19</source><target>19</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <executions>
                     <execution>
@@ -322,6 +359,13 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>--enable-preview</argLine>
+                </configuration>
             </plugin>
         </plugins>
     </build>
