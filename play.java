@@ -119,8 +119,8 @@ To cancel the game, enter 'cancel'
     play(final TextIO textIO, final TextTerminal<?> terminal) {
         this.textIO = textIO;
         this.terminal = terminal;
-        this.players = new ArrayList<>();
         this.settings = Settings.defaults().withAutoDice(true);
+        this.players = List.of(Player.human("Player 1", settings.retries()), Player.computer("Computer"));
 
         terminal.println(BANNER);
     }
@@ -171,7 +171,7 @@ To cancel the game, enter 'cancel'
                 case 2 -> {
                     terminal.println();
                     if (players.isEmpty()) {
-                        terminal.println("No players");
+                        terminal.println("No players!");
                     }
                     for (Player player : players) {
                         terminal.printf("%s%n", player);
@@ -197,68 +197,72 @@ To cancel the game, enter 'cancel'
     }
 
     void play() {
-        Game game = new Game("console-game", new Players(players), new Numbers(settings.numbers()), new OperationAlgorithm(),
-                settings);
+        if (players.isEmpty()) {
+            terminal.println("No players!");
+        } else {
+            Game game = new Game("console-game", new Players(players), new Numbers(settings.numbers()), new OperationAlgorithm(),
+                    settings);
 
-        terminal.print(PLAY);
-        while (game.hasNext()) {
-            game.next();
-            game.dice(Dice.random());
+            terminal.print(PLAY);
+            while (game.hasNext()) {
+                game.next();
+                game.dice(Dice.random());
 
-            Players players = game.players();
-            Player currentPlayer = players.current();
-            int currentNumber = game.numbers().current();
-            if (players.first()) {
-                printScoreboard(game);
-            }
-            if (currentPlayer.human()) {
-                String expression;
-                boolean validTerm = false;
-                while (!validTerm && !game.canceled()) {
-                    String prompt = "%s try to reach %d using %s".formatted(currentPlayer.name(), currentNumber, game.dice());
-                    try {
-                        expression = textIO.newStringInputReader().read(prompt);
-                        if ("retry".equalsIgnoreCase(expression)) {
-                            if (game.retry()) {
-                                terminal.printf("You have %d retries left.%n", currentPlayer.retries());
-                            } else {
-                                terminal.println("Sorry you have no retries left");
-                            }
-                        } else if ("skip".equalsIgnoreCase(expression)) {
-                            game.skip();
-                            validTerm = true;
-                        } else if ("cancel".equalsIgnoreCase(expression)) {
-                            game.cancel();
-                        } else {
-                            Calculation calculation = game.calculate(expression);
-                            if (calculation.best()) {
-                                terminal.printf("Well done, your solution is the best.%n");
-                            } else {
-                                terminal.printf("Your difference is %d. The best solution is %s (difference %d)%n",
-                                        calculation.difference(), calculation.bestSolution(), calculation.bestDifference());
-                            }
-                            game.score(calculation.term(), calculation.difference());
-                            validTerm = true;
-                        }
-                    } catch (TermException | DiceException e) {
-                        terminal.printf("%s%n", e.getMessage());
-                    }
+                Players players = game.players();
+                Player currentPlayer = players.current();
+                int currentNumber = game.numbers().current();
+                if (players.first()) {
+                    printScoreboard(game);
                 }
-            } else {
-                Solution solution = game.solve();
-                game.score(solution);
-                terminal.printf("%s diced %s. Solution: %s%n", currentPlayer.name(), game.dice(), solution);
+                if (currentPlayer.human()) {
+                    String expression;
+                    boolean validTerm = false;
+                    while (!validTerm && !game.canceled()) {
+                        String prompt = "%s try to reach %d using %s".formatted(currentPlayer.name(), currentNumber, game.dice());
+                        try {
+                            expression = textIO.newStringInputReader().read(prompt);
+                            if ("retry".equalsIgnoreCase(expression)) {
+                                if (game.retry()) {
+                                    terminal.printf("You have %d retries left.%n", currentPlayer.retries());
+                                } else {
+                                    terminal.println("Sorry you have no retries left");
+                                }
+                            } else if ("skip".equalsIgnoreCase(expression)) {
+                                game.skip();
+                                validTerm = true;
+                            } else if ("cancel".equalsIgnoreCase(expression)) {
+                                game.cancel();
+                            } else {
+                                Calculation calculation = game.calculate(expression);
+                                if (calculation.best()) {
+                                    terminal.printf("Well done, your solution is the best.%n");
+                                } else {
+                                    terminal.printf("Your difference is %d. The best solution is %s (difference %d)%n",
+                                            calculation.difference(), calculation.bestSolution(), calculation.bestDifference());
+                                }
+                                game.score(calculation.term(), calculation.difference());
+                                validTerm = true;
+                            }
+                        } catch (TermException | DiceException e) {
+                            terminal.printf("%s%n", e.getMessage());
+                        }
+                    }
+                } else {
+                    Solution solution = game.solve();
+                    game.score(solution);
+                    terminal.printf("%s diced %s. Solution: %s%n", currentPlayer.name(), game.dice(), solution);
+                }
             }
-        }
 
-        if (!game.canceled()) {
-            printScoreboard(game);
-            terminal.printf("Game over. ");
-            List<Player> winners = game.scoreboard().winners();
-            if (winners.size() == 1) {
-                terminal.printf("The winner is %s!%n", winners.get(0).name());
-            } else {
-                terminal.printf("The winners are %s!%n", winners.stream().map(Player::name).collect(joining(", ")));
+            if (!game.canceled()) {
+                printScoreboard(game);
+                terminal.printf("Game over. ");
+                List<Player> winners = game.scoreboard().winners();
+                if (winners.size() == 1) {
+                    terminal.printf("The winner is %s!%n", winners.get(0).name());
+                } else {
+                    terminal.printf("The winners are %s!%n", winners.stream().map(Player::name).collect(joining(", ")));
+                }
             }
         }
         start();

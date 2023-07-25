@@ -16,7 +16,7 @@ Have fun!
 
 # Play
 
-If you want to play Schlawiner in the console, use the provided [JBang](https://www.jbang.dev) script:
+If you want to play Schlawiner in the terminal, use the provided [JBang](https://www.jbang.dev) script (make sure you've executed `mvn install`, before running it). 
 
 ```shell
 jbang play.java

@@ -23,7 +23,7 @@ public class Player {
         return new Player(name, true, retries);
     }
 
-    static Player computer(final String name) {
+    public static Player computer(final String name) {
         return new Player(name, false, 0);
     }
 
