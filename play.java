@@ -15,9 +15,8 @@
  */
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 
-//JAVA 20
-//COMPILE_OPTIONS --enable-preview -source 20
-//RUNTIME_OPTIONS --enable-preview
+//JAVA 21
+//COMPILE_OPTIONS -source 21
 
 //DEPS org.beryx:text-io:3.4.1
 //DEPS io.schlawiner:schlawiner-engine-java:0.0.1
