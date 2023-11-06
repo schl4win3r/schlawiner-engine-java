@@ -97,7 +97,7 @@
 
         <!-- Build related -->
         <encoding>UTF-8</encoding>
-        <java.version>20</java.version>
+        <java.version>21</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.min.version>3.2.5</maven.min.version>
@@ -153,7 +153,7 @@
                     <configuration>
                         <!-- TODO
                                 Revert to <compliance>${java.version}</compliance>
-                                as soon as there's a constant for Java 20 in
+                                as soon as there's a constant for Java 21 in
                                 https://github.com/javaparser/javaparser/blob/master/javaparser-core/src/main/java/com/github/javaparser/ParserConfiguration.java
                         -->
                         <compliance>17</compliance>

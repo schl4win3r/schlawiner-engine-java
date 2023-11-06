@@ -70,7 +70,7 @@ public final class DiceValidator {
     }
 
     private static int[] extractTermNumbers(final String expression) {
-        if (expression == null || expression.trim().length() == 0) {
+        if (expression == null || expression.trim().isEmpty()) {
             return new int[0];
         }
 

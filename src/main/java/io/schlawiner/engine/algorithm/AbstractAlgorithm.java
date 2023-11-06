@@ -61,7 +61,8 @@ abstract class AbstractAlgorithm implements Algorithm {
         return solutions;
     }
 
-    protected abstract void computePermutation(int a, int b, int c, int target, Solutions solutions);
+    protected abstract void computePermutation(final int a, final int b, final int c, final int target,
+            final Solutions solutions);
 
     boolean differentDiceNumbers(final int a, final int b, final int c) {
         return a != b || a != c;
