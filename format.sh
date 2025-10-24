@@ -96,5 +96,4 @@ parse_params "$@"
 setup_colors
 mvn \
   com.mycila:license-maven-plugin:format \
-  net.revelc.code.formatter:formatter-maven-plugin:format \
-  net.revelc.code:impsort-maven-plugin:sort
+  net.revelc.code.formatter:formatter-maven-plugin:format

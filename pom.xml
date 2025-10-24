@@ -58,20 +58,19 @@
     </developers>
 
     <scm>
-        <connection>scm:git:${repo.scm.connection}</connection>
-        <developerConnection>scm:git:${repo.scm.connection}</developerConnection>
-        <url>${repo.scm.url}</url>
+        <connection>scm:git:git@github.com:${github.org}/${github.name}.git</connection>
+        <developerConnection>scm:git:git@github.com:${github.org}/${github.name}.git</developerConnection>
+        <url>https://github.com/${github.org}/${github.name}</url>
         <tag>HEAD</tag>
     </scm>
-
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/${github.org}/${github.name}/issues</url>
+    </issueManagement>
     <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>${repo.sonatype.url}/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>${repo.sonatype.url}/service/local/staging/deploy/maven2/</url>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/${github.org}/${github.name}</url>
         </repository>
     </distributionManagement>
 
@@ -88,18 +87,13 @@
         <version.impsort.plugin>1.12.0</version.impsort.plugin>
         <version.keepachangelog>2.1.1</version.keepachangelog>
         <version.license.plugin>5.0.0</version.license.plugin>
-        <version.nexus.staging.plugin>1.7.0</version.nexus.staging.plugin>
-
-        <!-- Repos, URLs & protocols -->
-        <repo.scm.connection>git@github.com:schl4win3r/schlawiner-engine-java.git</repo.scm.connection>
-        <repo.scm.url>https://github.com/schl4win3r/schlawiner-engine-java</repo.scm.url>
-        <repo.sonatype.url>https://s01.oss.sonatype.org</repo.sonatype.url>
 
         <!-- Build related -->
         <encoding>UTF-8</encoding>
-        <java.version>21</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <github.org>schl4win3r</github.org>
+        <github.name>schlawiner-engine-java</github.name>
+        <java.version>25</java.version>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
         <maven.min.version>3.9.9</maven.min.version>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
@@ -108,12 +102,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-				<groupId>org.junit</groupId>
-				<artifactId>junit-bom</artifactId>
-				<version>${version.junit}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${version.junit}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -144,26 +138,6 @@
                     <version>${version.formatter.plugin}</version>
                     <configuration>
                         <configFile>etc/eclipse-formatter-config.xml</configFile>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>net.revelc.code</groupId>
-                    <artifactId>impsort-maven-plugin</artifactId>
-                    <version>${version.impsort.plugin}</version>
-                    <configuration>
-                        <!-- TODO
-                                Revert to <compliance>${java.version}</compliance>
-                                as soon as there's a constant for Java 21 in
-                                https://github.com/javaparser/javaparser/blob/master/javaparser-core/src/main/java/com/github/javaparser/ParserConfiguration.java
-                        -->
-                        <compliance>17</compliance>
-                        <groups>java.,jakarta.,org.,io.,com.</groups>
-                        <removeUnused>true</removeUnused>
-                        <staticAfter>true</staticAfter>
-                        <excludes>
-                            <exclude>**/Node.java</exclude>
-                            <exclude>**/Term.java</exclude>
-                        </excludes>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -202,7 +176,7 @@
                         <includeTestSourceDirectory>true</includeTestSourceDirectory>
                         <excludes>**/*$logger.java,**/*$bundle.java</excludes>
                         <suppressionsLocation>etc/checkstyle-suppressions.xml</suppressionsLocation>
-                        <useFile />
+                        <useFile/>
                     </configuration>
                     <dependencies>
                         <dependency>
@@ -244,12 +218,6 @@
                         </rules>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>${version.nexus.staging.plugin}</version>
-                    <extensions>true</extensions>
-                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -271,26 +239,6 @@
                         <phase>verify</phase>
                         <goals>
                             <goal>validate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>net.revelc.code</groupId>
-                <artifactId>impsort-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>impsort-sort</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>sort</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>impsort-check</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -330,14 +278,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <release>${java.version}</release>
-                    <compilerArgs>--enable-preview</compilerArgs><source>20</source><target>20</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <executions>
                     <execution>
@@ -348,13 +288,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <argLine>--enable-preview</argLine>
-                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -391,15 +324,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <additionalOptions>
-                                <additionalOption>-html5</additionalOption>
-                            </additionalOptions>
-                            <detectLinks>true</detectLinks>
-                            <doclint>none</doclint>
-                            <failOnError>false</failOnError>
-                            <show>public</show>
-                        </configuration>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -420,6 +344,7 @@
                                     <goal>sign</goal>
                                 </goals>
                                 <configuration>
+                                    <!-- Prevent gpg from using pinentry programs -->
                                     <gpgArguments>
                                         <arg>--pinentry-mode</arg>
                                         <arg>loopback</arg>
@@ -427,16 +352,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>${repo.sonatype.url}</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>

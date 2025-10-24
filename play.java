@@ -15,8 +15,8 @@
  */
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 
-//JAVA 21
-//COMPILE_OPTIONS -source 21
+//JAVA 25
+//COMPILE_OPTIONS -source 25
 
 //DEPS org.beryx:text-io:3.4.1
 //DEPS io.schlawiner:schlawiner-engine-java:0.0.1
