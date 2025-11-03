@@ -78,7 +78,7 @@
         <!-- Dependency versions -->
         <version.checkstyle.config>1.0.8.Final</version.checkstyle.config>
         <version.checkstyle>10.5.0</version.checkstyle>
-        <version.junit>6.0.0</version.junit>
+        <version.junit>6.0.1</version.junit>
 
         <!-- Plugin versions -->
         <version.checkstyle.plugin>3.2.1</version.checkstyle.plugin>
