@@ -15,6 +15,10 @@
  */
 package io.schlawiner.engine.game;
 
+/**
+ * Thrown when a player's expression does not correctly use the rolled dice values (e.g., missing a die, using a die twice, or
+ * using an invalid multiplier).
+ */
 public class DiceException extends RuntimeException {
 
     public DiceException(final String message) {

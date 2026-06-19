@@ -17,6 +17,10 @@ package io.schlawiner.engine.algorithm;
 
 import io.schlawiner.engine.term.Term;
 
+/**
+ * Pre-parsed {@link Term} templates with variables {@code a}, {@code b}, and {@code c} covering all operator and permutation
+ * combinations used by {@link TermAlgorithm}.
+ */
 interface Terms {
 
     // a + b + c

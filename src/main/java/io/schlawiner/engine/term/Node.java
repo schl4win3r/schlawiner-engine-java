@@ -15,18 +15,27 @@
  */
 package io.schlawiner.engine.term;
 
-/** Node of a binary tree */
+/**
+ * Node in a binary expression tree. Implementations are {@link Term} (operator node), {@link Value} (integer literal), and
+ * {@link Variable} (named placeholder resolved via {@link Assignment}).
+ */
 public sealed interface Node permits Term, Variable, Value {
 
+    /** Returns the parent node or {@code null} for the root. */
     Node parent();
 
+    /** Sets the parent node. Used during tree construction only. */
     void parent(Node parent);
 
+    /** Returns the left child or {@code null} for leaf nodes. */
     Node left();
 
+    /** Sets the left child. Used during tree construction only. */
     void left(Node left);
 
+    /** Returns the right child or {@code null} for leaf nodes. */
     Node right();
 
+    /** Sets the right child. Used during tree construction only. */
     void right(Node right);
 }

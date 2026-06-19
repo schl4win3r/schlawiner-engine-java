@@ -15,6 +15,7 @@
  */
 package io.schlawiner.engine.game;
 
+/** Difficulty level for computer players. Controls how close the computer's solution should be to the optimal one. */
 public enum Level {
 
     EASY(4), MEDIUM(2), HARD(0);
@@ -25,6 +26,10 @@ public enum Level {
         this.maxDifference = maxDifference;
     }
 
+    /**
+     * Returns the maximum allowed difference from the best solution. HARD = 0 (must be optimal), EASY = 4 (can be up to 4
+     * away).
+     */
     public int maxDifference() {
         return maxDifference;
     }

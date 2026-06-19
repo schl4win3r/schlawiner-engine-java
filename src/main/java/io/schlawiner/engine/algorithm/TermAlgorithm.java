@@ -22,6 +22,10 @@ import io.schlawiner.engine.term.Assignment;
 import io.schlawiner.engine.term.Term;
 import io.schlawiner.engine.term.TermException;
 
+/**
+ * Algorithm that computes solutions using pre-built {@link Term} templates with variable assignments. The terms are parsed once
+ * at class-load time and reused across evaluations.
+ */
 public class TermAlgorithm extends AbstractAlgorithm implements Terms {
 
     private static final List<Term> ABC = new ArrayList<>();

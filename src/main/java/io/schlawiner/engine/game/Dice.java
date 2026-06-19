@@ -17,11 +17,10 @@ package io.schlawiner.engine.game;
 
 import java.util.Random;
 
+/** Three dice values rolled for a single turn. Each value is between 1 and 6 (inclusive). */
 public record Dice(int[] numbers) {
 
-    /**
-     * New dice with three random numbers
-     */
+    /** Creates a new dice roll with three random values (1-6). */
     public static Dice random() {
         Random random = new Random();
         int[] numbers = new int[] { 1 + random.nextInt(6), 1 + random.nextInt(6), 1 + random.nextInt(6) };

@@ -15,9 +15,18 @@
  */
 package io.schlawiner.engine.algorithm;
 
+/**
+ * Strategy for computing solutions given three dice values and a target number. Each dice value can be multiplied by 1, 10, or
+ * 100. All operator and permutation combinations are tried.
+ *
+ * @see OperationAlgorithm
+ * @see TermAlgorithm
+ */
 public interface Algorithm {
 
+    /** Computes all valid solutions for the three dice values {@code a}, {@code b}, {@code c} and the given target number. */
     Solutions compute(int a, int b, int c, int target);
 
+    /** Returns a human-readable name for this algorithm. */
     String name();
 }

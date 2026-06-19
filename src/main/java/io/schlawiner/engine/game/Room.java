@@ -21,6 +21,7 @@ import java.util.Set;
 
 import static java.util.Collections.unmodifiableCollection;
 
+/** A waiting room where players gather before a game starts. Has a player limit and an owner who cannot be removed. */
 public class Room {
 
     private final String name;
@@ -76,6 +77,10 @@ public class Room {
         return players.isEmpty();
     }
 
+    /**
+     * Adds a player to the room if the limit has not been reached and the player is not the owner. Returns {@code true} if the
+     * player was added.
+     */
     public boolean join(final Player player) {
         boolean result = false;
         if (player != null && !player.equals(owner)) {
@@ -86,6 +91,7 @@ public class Room {
         return result;
     }
 
+    /** Removes a player from the room. The owner cannot leave. Returns {@code true} if the player was removed. */
     public boolean leave(final Player player) {
         boolean result = false;
         if (player != null && !player.equals(owner)) {

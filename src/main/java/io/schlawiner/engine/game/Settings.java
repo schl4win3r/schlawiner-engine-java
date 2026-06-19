@@ -17,6 +17,16 @@ package io.schlawiner.engine.game;
 
 import static io.schlawiner.engine.game.Level.MEDIUM;
 
+/**
+ * Immutable game configuration. Use {@link #defaults()} and {@code withX()} methods to build.
+ *
+ * @param timeout seconds before a turn times out
+ * @param penalty score penalty for skipping or timing out
+ * @param retries number of re-rolls allowed per human player
+ * @param numbers count of target numbers in the game
+ * @param autoDice whether dice are rolled automatically each turn
+ * @param level difficulty level for computer players
+ */
 public record Settings(int timeout, int penalty, int retries, int numbers, boolean autoDice, Level level) {
 
     public static Settings defaults() {

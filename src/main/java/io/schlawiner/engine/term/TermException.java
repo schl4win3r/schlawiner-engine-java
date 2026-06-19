@@ -15,6 +15,10 @@
  */
 package io.schlawiner.engine.term;
 
+/**
+ * Thrown when a term cannot be parsed or evaluated (e.g., invalid syntax, division by zero, non-exact division, missing
+ * variable assignment).
+ */
 public class TermException extends RuntimeException {
 
     public TermException(final String message) {

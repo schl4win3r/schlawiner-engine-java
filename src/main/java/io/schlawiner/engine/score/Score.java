@@ -15,9 +15,13 @@
  */
 package io.schlawiner.engine.score;
 
-// use String instead of Term here, since the 'term' could also be "skipped" or "timeout"
+/**
+ * A single score entry: the expression used and the difference from the target number. Uses {@code String} for the term (not
+ * {@link io.schlawiner.engine.term.Term}) because it may also be "Skipped" or "Timeout".
+ */
 public record Score(String term, int difference) {
 
+    /** Sentinel value for an unscored slot (no attempt yet). */
     static final Score EMPTY = new Score("", -1);
 
     @Override

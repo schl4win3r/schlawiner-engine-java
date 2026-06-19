@@ -21,7 +21,9 @@ import java.util.List;
 
 import static io.schlawiner.engine.util.Iterators.cycle;
 
-/** The players in a game */
+/**
+ * Manages the turn order for players in a game. Players cycle infinitely — after the last player, it wraps back to the first.
+ */
 public class Players implements Iterable<Player> {
 
     private final List<Player> players;
@@ -36,6 +38,7 @@ public class Players implements Iterable<Player> {
         this.iterator = cycle(players);
     }
 
+    /** Advances to the next player in the cycle and returns them. */
     public Player next() {
         if (iterator.hasNext()) {
             current = iterator.next();
@@ -43,10 +46,12 @@ public class Players implements Iterable<Player> {
         return current;
     }
 
+    /** Returns {@code true} if the current player is the first in the list (start of a new round). */
     public boolean first() {
         return current != null && players.indexOf(current) == 0;
     }
 
+    /** Returns {@code true} if the current player is the last in the list (end of a round). */
     public boolean last() {
         return current != null && players.indexOf(current) == players.size() - 1;
     }

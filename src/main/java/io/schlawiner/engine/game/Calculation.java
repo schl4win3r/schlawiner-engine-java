@@ -20,17 +20,23 @@ import io.schlawiner.engine.term.Term;
 
 import static java.lang.Math.abs;
 
-/** Calculation of a human player */
+/**
+ * Result of a human player's calculation attempt, including their term, the target number, and the algorithm's best solution
+ * for comparison.
+ */
 public record Calculation(Term term, int target, Solution bestSolution) {
 
+    /** Returns the absolute difference between the player's result and the target. */
     public int difference() {
         return abs(term.eval() - target);
     }
 
+    /** Returns {@code true} if the player's solution is as good as the algorithm's best. */
     public boolean best() {
         return difference() == 0 || difference() == bestDifference();
     }
 
+    /** Returns the absolute difference between the algorithm's best solution and the target. */
     public int bestDifference() {
         return abs(bestSolution.result() - target);
     }

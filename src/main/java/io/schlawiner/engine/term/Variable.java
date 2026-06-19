@@ -15,7 +15,8 @@
  */
 package io.schlawiner.engine.term;
 
-final class Variable implements Node {
+/** A leaf node representing a named variable in the expression tree, resolved at evaluation time via {@link Assignment}. */
+public final class Variable implements Node {
 
     private final String name;
     private Node parent;

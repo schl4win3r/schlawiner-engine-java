@@ -22,11 +22,13 @@ import java.util.regex.Pattern;
 
 import io.schlawiner.engine.term.Term;
 
+/** Validates that a player's expression uses all dice values exactly once, with valid multipliers (1, 10, or 100). */
 public final class DiceValidator {
 
     private static final int[] MULTIPLIERS = new int[] { 1, 10, 100 };
     private static final Pattern NUMBERS = Pattern.compile("\\d+");
 
+    /** Validates that the term uses all dice values exactly once with valid multipliers. */
     static void validate(final Dice dice, final Term term) throws DiceException {
         int[] values = term.getValues();
         if (values.length < dice.numbers().length) {
@@ -44,7 +46,8 @@ public final class DiceValidator {
     }
 
     /**
-     * Count used numbers of a probably invalid expression (not yet parsed term).
+     * Returns a boolean array indicating which dice values have been used in the expression (which may not be a valid term
+     * yet).
      */
     static boolean[] used(final Dice dice, final String expression) {
         int[] termNumbers = extractTermNumbers(expression);

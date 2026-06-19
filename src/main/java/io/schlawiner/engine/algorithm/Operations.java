@@ -15,6 +15,10 @@
  */
 package io.schlawiner.engine.algorithm;
 
+/**
+ * Static arithmetic operations for three dice values. Each method computes a result using a specific formula and returns a
+ * {@link Solution}. Returns {@link Solution#INVALID} when division is not exact.
+ */
 final class Operations {
 
     static Solution add(final int a, final int b, final int c) {

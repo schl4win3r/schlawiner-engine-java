@@ -15,6 +15,7 @@
  */
 package io.schlawiner.engine.term;
 
+/** A leaf node representing an integer literal in the expression tree. */
 final class Value implements Node {
 
     private final int value;

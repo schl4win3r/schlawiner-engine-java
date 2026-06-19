@@ -17,12 +17,15 @@ package io.schlawiner.engine.game;
 
 import java.util.Objects;
 
+/** A human or computer player in the game. Human players have a limited number of retries to re-roll the dice. */
 public class Player {
 
+    /** Creates a human player with the given name and retry count. */
     public static Player human(final String name, final int retries) {
         return new Player(name, true, retries);
     }
 
+    /** Creates a computer player with the given name (no retries). */
     public static Player computer(final String name) {
         return new Player(name, false, 0);
     }

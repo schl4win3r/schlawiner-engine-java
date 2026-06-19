@@ -15,9 +15,13 @@
  */
 package io.schlawiner.engine.algorithm;
 
+/**
+ * Base class for algorithm implementations. Iterates over all multiplier combinations (1, 10, 100 for each die) and delegates
+ * to {@link #computePermutation(int, int, int, int, Solutions)} for each combination.
+ */
 abstract class AbstractAlgorithm implements Algorithm {
 
-    // Calculated by io.schlawiner.engine.algorithm.FindDifference
+    /** Maximum allowed difference between a solution result and the target. Calculated by {@code FindDifference}. */
     private static final int DEFAULT_DIFFERENCE = 15;
 
     // @formatter:off
@@ -61,9 +65,11 @@ abstract class AbstractAlgorithm implements Algorithm {
         return solutions;
     }
 
+    /** Computes solutions for a single multiplier combination. Called once per multiplier set. */
     protected abstract void computePermutation(final int a, final int b, final int c, final int target,
             final Solutions solutions);
 
+    /** Returns {@code true} if not all three values are the same, meaning permutations may produce different results. */
     boolean differentDiceNumbers(final int a, final int b, final int c) {
         return a != b || a != c;
     }

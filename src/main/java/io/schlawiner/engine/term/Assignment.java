@@ -20,6 +20,7 @@ import java.util.Map;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toMap;
 
+/** Binds a variable name to an integer value for use when evaluating a {@link Term} containing variables. */
 public record Assignment(String name, int value) {
 
     static Map<String, Integer> byName(final Assignment... assignments) {

@@ -21,6 +21,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+/**
+ * Converts infix arithmetic expressions to Reverse Polish Notation (RPN) using the shunting-yard algorithm. The RPN output is
+ * consumed by {@link TermBuilder} to construct a binary expression tree.
+ */
 final class InfixToRPN {
 
     private static final Set<Character> OPS = new HashSet<>();
@@ -33,8 +37,9 @@ final class InfixToRPN {
         OPS.add('/');
     }
 
+    /** Converts an infix expression string to an array of tokens in RPN order. */
     static String[] infixToRPN(final String expression) {
-        if (expression == null || expression.trim().length() == 0) {
+        if (expression == null || expression.trim().isEmpty()) {
             return new String[0];
         }
 
@@ -48,7 +53,7 @@ final class InfixToRPN {
         for (int i = 0; i < expression.length(); i++) {
             char c = expression.charAt(i);
             if (OPS.contains(c) || Character.isWhitespace(c)) {
-                if (number.length() > 0) {
+                if (!number.isEmpty()) {
                     tokens.add(number.toString());
                     number = new StringBuilder();
                 }
@@ -59,7 +64,7 @@ final class InfixToRPN {
                 number.append(c);
             }
         }
-        if (number.length() > 0) {
+        if (!number.isEmpty()) {
             tokens.add(number.toString());
         }
         return tokens.toArray(new String[0]);

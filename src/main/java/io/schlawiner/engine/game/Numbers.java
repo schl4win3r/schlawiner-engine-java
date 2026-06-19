@@ -20,6 +20,7 @@ import java.util.Random;
 
 import static io.schlawiner.engine.util.Iterators.forArray;
 
+/** The sequence of target numbers that players try to reach during a game. Supports iteration and index-based access. */
 public class Numbers implements Iterable<Integer> {
 
     private final int count;

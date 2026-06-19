@@ -15,6 +15,10 @@
  */
 package io.schlawiner.engine.algorithm;
 
+/**
+ * Algorithm that computes solutions using static arithmetic operations in {@link Operations}. Each operation is a hardcoded
+ * formula applied to the three dice values and their permutations.
+ */
 public class OperationAlgorithm extends AbstractAlgorithm {
 
     public OperationAlgorithm() {

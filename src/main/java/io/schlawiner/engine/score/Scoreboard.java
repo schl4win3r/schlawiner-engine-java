@@ -26,7 +26,10 @@ import io.schlawiner.engine.game.Numbers;
 import io.schlawiner.engine.game.Player;
 import io.schlawiner.engine.game.Players;
 
-/** Scoreboard with all information ({@link Players}, {@link NumberScore}, {@link PlayerScore}) */
+/**
+ * Central scoreboard tracking all scores during a game. Provides two complementary views: {@link NumberScore} (scores for a
+ * target number across all players) and {@link PlayerScore} (scores for a player across all numbers).
+ */
 public class Scoreboard {
 
     private final Players players;
@@ -52,6 +55,9 @@ public class Scoreboard {
         }
     }
 
+    /**
+     * Records a score for the given player at the given number index. Updates both the number-centric and player-centric views.
+     */
     public void score(final int numberIndex, final Player player, final String term, final int difference) {
         Score score = new Score(term, difference);
         if (numberIndex > -1 && numberIndex < numberScores.length) {
@@ -67,6 +73,7 @@ public class Scoreboard {
         }
     }
 
+    /** Returns the score for a specific player at a specific number index. */
     public Score score(final Player player, final int numberIndex) {
         return numberScores[numberIndex].score(player);
     }
@@ -81,6 +88,7 @@ public class Scoreboard {
         return list;
     }
 
+    /** Returns the total summed difference for the given player across all numbers. */
     public int summedScore(final Player player) {
         if (playerSums.containsKey(player)) {
             return playerSums.get(player);
@@ -88,6 +96,10 @@ public class Scoreboard {
         return 0;
     }
 
+    /**
+     * Returns the player(s) with the lowest total score (smallest total difference). May return multiple players in case of a
+     * tie.
+     */
     public List<Player> winners() {
         int min = Integer.MAX_VALUE;
         for (Integer sum : playerSums.values()) {

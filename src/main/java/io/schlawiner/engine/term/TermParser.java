@@ -15,14 +15,21 @@
  */
 package io.schlawiner.engine.term;
 
+import static io.schlawiner.engine.term.InfixToRPN.infixToRPN;
+
+/**
+ * Parses infix expressions into {@link Term} trees. Delegates to {@link InfixToRPN} for tokenization and {@link TermBuilder}
+ * for tree construction.
+ */
 final class TermParser {
 
+    /** Parses the given infix expression and returns the root {@link Term} of the expression tree. */
     static Term parse(final String expression) {
-        if (expression == null || expression.trim().length() == 0) {
+        if (expression == null || expression.trim().isEmpty()) {
             throw new TermException("Empty term");
         }
 
-        String[] rpn = InfixToRPN.infixToRPN(expression);
+        String[] rpn = infixToRPN(expression);
         if (rpn.length == 0) {
             throw new TermException("Invalid term: '%s'".formatted(expression));
         }

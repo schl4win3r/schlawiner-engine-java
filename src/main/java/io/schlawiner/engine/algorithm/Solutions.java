@@ -19,6 +19,7 @@ import io.schlawiner.engine.game.Level;
 
 import static java.lang.Math.abs;
 
+/** Collects solutions from an algorithm run and tracks the best one (closest to the target number). */
 public class Solutions {
 
     private final int target;
@@ -31,6 +32,10 @@ public class Solutions {
         this.bestSolution = null;
     }
 
+    /**
+     * Adds a solution if its result is within the allowed difference from the target. Updates the best solution if this one is
+     * closer.
+     */
     public void add(final Solution solution) {
         if (solution.result() >= target - allowedDifference && solution.result() <= target + allowedDifference) {
             if (bestSolution == null) {
@@ -43,10 +48,15 @@ public class Solutions {
         }
     }
 
+    /** Returns the best solution found, or {@code null} if no valid solution exists. */
     public Solution bestSolution() {
         return bestSolution;
     }
 
+    /**
+     * Returns a solution appropriate for the given difficulty level. Currently delegates to {@link #bestSolution()} (not yet
+     * level-aware).
+     */
     public Solution bestSolution(final Level level) {
         // TODO Choose bestSolution based on level
         return bestSolution();

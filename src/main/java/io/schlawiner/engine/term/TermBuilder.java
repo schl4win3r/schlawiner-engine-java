@@ -17,6 +17,10 @@ package io.schlawiner.engine.term;
 
 import java.util.Stack;
 
+/**
+ * Builds a binary expression tree from RPN tokens. Operators are pushed onto a stack; values and variables are assigned as
+ * children.
+ */
 class TermBuilder {
 
     private final String expression;

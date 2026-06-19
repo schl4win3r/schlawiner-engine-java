@@ -20,8 +20,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+/**
+ * An operator node in a binary expression tree. Represents an arithmetic expression that can be parsed from infix notation,
+ * evaluated to an integer result, and printed back to a string.
+ *
+ * <p>
+ * Terms support named variables that are resolved at evaluation time via {@link Assignment}s. Division is integer-only and must
+ * be exact (no remainder), otherwise a {@link TermException} is thrown.
+ *
+ * <p>
+ * Example usage:
+ *
+ * <pre>
+ * Term term = Term.valueOf("(a + b) * c");
+ * int result = term.eval(new Assignment("a", 3), new Assignment("b", 4), new Assignment("c", 2));
+ * </pre>
+ */
 public final class Term implements Node {
 
+    /** Parses an infix expression into a {@link Term} tree. */
     public static Term valueOf(final String expression) throws TermException {
         return TermParser.parse(expression);
     }
@@ -37,6 +54,7 @@ public final class Term implements Node {
         this.hasVariables = false;
     }
 
+    /** Evaluates this term and returns the integer result. Variables must be bound via assignments. */
     public int eval(final Assignment... assignments) {
         if (hasVariables && assignments.length == 0) {
             throw new TermException("Unable to eval term. No assignments for %s".formatted(getVariables()));
@@ -44,6 +62,7 @@ public final class Term implements Node {
         return new EvalIterator().eval(this, Assignment.byName(assignments));
     }
 
+    /** Prints this term as an infix expression. Variables are substituted with their assigned values if provided. */
     public String print(final Assignment... assignments) {
         return new PrintIterator().print(this, Assignment.byName(assignments));
     }
@@ -57,14 +76,17 @@ public final class Term implements Node {
         return left != null && right != null;
     }
 
+    /** Returns all integer values (literals) in this term via in-order traversal. */
     public int[] getValues() {
         return new GetValuesIterator().values(this);
     }
 
+    /** Returns all operators in this term via in-order traversal. */
     public List<Operator> getOperators() {
         return new GetOperatorsIterator().operators(this);
     }
 
+    /** Returns all variables in this term via in-order traversal. */
     public List<Variable> getVariables() {
         return new GetVariablesIterator().variables(this);
     }

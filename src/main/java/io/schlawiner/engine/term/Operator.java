@@ -15,6 +15,7 @@
  */
 package io.schlawiner.engine.term;
 
+/** Arithmetic operators supported in term expressions, with their precedence for correct evaluation order. */
 public enum Operator {
 
     PLUS(0) {
@@ -51,10 +52,12 @@ public enum Operator {
         this.precedence = precedence;
     }
 
+    /** Returns {@code true} if the token is one of {@code +}, {@code -}, {@code *}, or {@code /}. */
     static boolean isOperator(final String token) {
         return toOperator(token) != null;
     }
 
+    /** Converts a token string to an {@link Operator}, or returns {@code null} if the token is not a valid operator. */
     public static Operator toOperator(final String token) {
         if (token != null) {
             return switch (token) {
@@ -68,6 +71,10 @@ public enum Operator {
         return null;
     }
 
+    /**
+     * Returns the precedence level. Higher values bind tighter ({@code *} and {@code /} have higher precedence than {@code +}
+     * and {@code -}).
+     */
     public int precedence() {
         return this.precedence;
     }
